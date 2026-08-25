@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrimeX - Ultimate Social Ecosystem</title>
+    <title>PrimeX - Next-Gen Social Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -16,7 +16,7 @@
 
     <div class="w-full max-w-md h-screen flex flex-col justify-between bg-gray-950 relative border-x border-gray-800">
 
-        <!-- Top Header -->
+        <!-- Header -->
         <header class="h-14 border-b border-gray-800 px-4 flex justify-between items-center bg-gray-950/90 backdrop-blur z-20 sticky top-0">
             <h1 class="text-xl font-black tracking-wider text-indigo-500">PrimeX<span class="text-xs text-amber-400 font-bold ml-1">v5.0 PRO</span></h1>
             <div id="user-header-actions" class="flex items-center gap-2 hidden">
@@ -38,8 +38,8 @@
         <!-- Auth View -->
         <main id="auth-view" class="flex-1 p-6 flex flex-col justify-center items-center">
             <div class="w-full bg-gray-900 border border-gray-800 rounded-3xl p-6 shadow-2xl text-center">
-                <h2 class="text-2xl font-black mb-1">Join PrimeX</h2>
-                <p class="text-gray-400 text-xs mb-6">Next-Gen Media, Live & Financial Platform</p>
+                <h2 class="text-2xl font-black mb-1">Welcome to PrimeX</h2>
+                <p class="text-gray-400 text-xs mb-6">High-Level Media & Creator Platform</p>
 
                 <button id="btn-google" class="w-full bg-white text-gray-900 font-semibold py-2.5 px-4 rounded-xl flex items-center justify-center gap-3 transition mb-4 shadow">
                     <i class="fa-brands fa-google text-red-500 text-lg"></i>
@@ -66,10 +66,10 @@
             </div>
         </main>
 
-        <!-- Main Content Views -->
+        <!-- App Container -->
         <main id="app-view" class="flex-1 overflow-y-auto no-scrollbar hidden relative">
             
-            <!-- Home Feed View -->
+            <!-- Home Feed View (TikTok Reel Snap) -->
             <div id="view-home" class="h-full w-full flex flex-col">
                 <div class="h-20 border-b border-gray-800 flex items-center gap-3 px-4 overflow-x-auto no-scrollbar bg-gray-950/50">
                     <div class="flex flex-col items-center gap-1 cursor-pointer">
@@ -84,13 +84,13 @@
                 <div id="reels-feed" class="flex-1 overflow-y-scroll reel-snap no-scrollbar"></div>
             </div>
 
-            <!-- Explore View -->
+            <!-- Explore View (Instagram Grid) -->
             <div id="view-explore" class="h-full w-full p-4 hidden overflow-y-auto no-scrollbar">
                 <div class="relative mb-4">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-gray-400"></i>
-                    <input type="text" placeholder="Search creators, live streams..." class="w-full bg-gray-900 border border-gray-800 rounded-xl pl-9 pr-4 py-2 text-sm focus:outline-none">
+                    <input type="text" placeholder="Search creators, viral reels..." class="w-full bg-gray-900 border border-gray-800 rounded-xl pl-9 pr-4 py-2 text-sm focus:outline-none">
                 </div>
-                <h3 class="text-sm font-bold text-indigo-400 mb-3"><i class="fa-solid fa-fire mr-1"></i> AI Trending Shorts</h3>
+                <h3 class="text-sm font-bold text-indigo-400 mb-3"><i class="fa-solid fa-fire mr-1"></i> Trending Media</h3>
                 <div id="explore-grid" class="grid grid-cols-2 gap-2"></div>
             </div>
 
@@ -101,137 +101,119 @@
                     <h2 class="text-4xl font-extrabold my-2 text-amber-400 flex items-center justify-center gap-2">
                         <i class="fa-solid fa-coins"></i> <span id="wallet-coins">0</span>
                     </h2>
-                    <p class="text-xs text-gray-300">Estimated value: <span id="wallet-pkr" class="text-emerald-400 font-bold">0 PKR</span></p>
+                    <p class="text-xs text-gray-300">Estimated Value: <span id="wallet-pkr" class="text-emerald-400 font-bold">0 PKR</span></p>
                 </div>
                 
-                <h3 class="text-sm font-bold mb-3">Withdraw Gateway</h3>
-                <div class="space-y-2">
-                    <div class="bg-gray-900 border border-gray-800 p-3 rounded-xl flex justify-between items-center">
-                        <span class="text-xs font-semibold">EasyPaisa / JazzCash</span>
-                        <button class="bg-emerald-600 hover:bg-emerald-700 text-[10px] font-bold px-3 py-1.5 rounded-lg">Withdraw</button>
-                    </div>
-                    <div class="bg-gray-900 border border-gray-800 p-3 rounded-xl flex justify-between items-center">
-                        <span class="text-xs font-semibold">Binance Crypto (USDT)</span>
-                        <button class="bg-emerald-600 hover:bg-emerald-700 text-[10px] font-bold px-3 py-1.5 rounded-lg">Withdraw</button>
+                <h3 class="text-sm font-bold mb-3">Instant Withdrawal Gateway</h3>
+                <div class="space-y-3">
+                    <div class="bg-gray-900 border border-gray-800 p-3.5 rounded-xl space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-semibold">EasyPaisa / JazzCash</span>
+                            <span class="text-[10px] text-emerald-400 font-bold">1 Coin = 0.5 PKR</span>
+                        </div>
+                        <input type="text" id="withdraw-account" placeholder="Enter Account / Mobile Number" class="w-full bg-gray-950 border border-gray-800 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                        <button onclick="requestWithdrawal('EasyPaisa/JazzCash')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-xs font-bold py-2 rounded-lg transition">Request Payout</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Profile & Creator Analytics View -->
+            <!-- Profile View -->
             <div id="view-profile" class="h-full w-full p-6 hidden overflow-y-auto no-scrollbar">
                 <div class="text-center">
                     <div id="profile-avatar" class="w-20 h-20 bg-indigo-600 rounded-full mx-auto flex items-center justify-center text-2xl font-black mb-2 border-2 border-indigo-400 shadow-lg">U</div>
                     <h2 class="text-lg font-bold flex items-center justify-center gap-1">
-                        <span id="profile-name">User Name</span>
-                        <i class="fa-solid fa-circle-check text-indigo-400 text-sm" title="Verified Creator"></i>
+                        <span id="profile-name">User</span>
+                        <i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
                     </h2>
                     <p class="text-xs text-indigo-400 font-semibold mb-4">PrimeX Verified Creator</p>
                 </div>
 
                 <div class="flex justify-around bg-gray-900 border border-gray-800 p-3 rounded-xl mb-6 text-center">
                     <div><span class="block font-bold text-sm">12</span><span class="text-[10px] text-gray-400">Posts</span></div>
-                    <div><span class="block font-bold text-sm">1.4K</span><span class="text-[10px] text-gray-400">Followers</span></div>
-                    <div><span class="block font-bold text-sm">350</span><span class="text-[10px] text-gray-400">Coins</span></div>
-                </div>
-
-                <!-- Creator Analytics Dashboard -->
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Creator Engagement Analytics</h3>
-                <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 space-y-3 mb-6">
-                    <div class="flex justify-between items-center text-xs">
-                        <span class="text-gray-400">Profile Impressions</span>
-                        <span class="font-bold text-emerald-400">+24.5% (8.2K)</span>
-                    </div>
-                    <div class="w-full bg-gray-950 h-2 rounded-full overflow-hidden">
-                        <div class="bg-indigo-500 h-full w-[75%]"></div>
-                    </div>
-                    <div class="flex justify-between items-center text-xs">
-                        <span class="text-gray-400">Video Watch Time</span>
-                        <span class="font-bold text-indigo-400">142 Hours</span>
-                    </div>
+                    <div><span class="block font-bold text-sm">2.4K</span><span class="text-[10px] text-gray-400">Followers</span></div>
+                    <div><span id="profile-coins" class="block font-bold text-sm text-amber-400">0</span><span class="text-[10px] text-gray-400">Coins</span></div>
                 </div>
             </div>
 
-            <!-- Upload Modal (With Music Selector) -->
+            <!-- Upload Modal -->
             <div id="upload-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
                 <div class="bg-gray-900 border border-gray-800 w-full max-w-sm rounded-2xl p-5 relative">
                     <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-                    <h3 class="text-lg font-bold mb-4">Upload Media Post</h3>
+                    <h3 class="text-lg font-bold mb-4">Upload Media</h3>
                     
                     <textarea id="post-caption" rows="2" placeholder="Write caption..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 mb-3 resize-none"></textarea>
                     
-                    <div class="mb-3">
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Select Audio / Music Track:</label>
-                        <select id="post-music-select" class="w-full bg-gray-950 border border-gray-800 text-xs rounded-xl p-2.5 text-indigo-300 focus:outline-none">
-                            <option value="PrimeX Original Sound">🎵 PrimeX Original Sound</option>
-                            <option value="Trending Beat 2026">🔥 Trending Beat 2026</option>
-                            <option value="Aesthetic Lofi Chill">🎧 Aesthetic Lofi Chill</option>
-                        </select>
-                    </div>
-
                     <div class="mb-4">
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Select Image/Video File:</label>
+                        <label class="block text-xs font-bold text-gray-400 mb-1">Select Video / Image File:</label>
                         <input type="file" id="post-file-input" accept="image/*,video/*" class="w-full text-xs text-gray-400 bg-gray-950 border border-gray-800 rounded-xl p-2 cursor-pointer">
                     </div>
 
                     <div id="upload-status" class="text-xs text-indigo-400 font-bold mb-3 hidden text-center">
-                        <i class="fa-solid fa-spinner fa-spin mr-1"></i> Uploading to Cloud...
+                        <i class="fa-solid fa-spinner fa-spin mr-1"></i> Uploading...
                     </div>
 
                     <button id="btn-submit-post" class="w-full bg-indigo-600 hover:bg-indigo-700 font-bold py-2.5 rounded-xl text-sm transition">Publish Post</button>
                 </div>
             </div>
 
-            <!-- Live Streaming Modal (TikTok-Style Gifting) -->
+            <!-- TikTok / Instagram Style Interactive Live Modal -->
             <div id="live-stream-modal" class="fixed inset-0 bg-black z-50 hidden flex flex-col justify-between p-4">
-                <div class="flex justify-between items-center z-10">
+                <div class="flex justify-between items-center z-20">
                     <div class="flex items-center gap-2 bg-black/50 backdrop-blur px-3 py-1.5 rounded-full border border-gray-800">
                         <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
                         <span class="text-xs font-bold text-rose-500">LIVE</span>
-                        <span class="text-xs text-gray-300 font-semibold"><i class="fa-solid fa-eye text-xs ml-1"></i> 1.2K</span>
+                        <span class="text-xs text-gray-300 font-semibold"><i class="fa-solid fa-eye text-xs ml-1"></i> 1.5K</span>
                     </div>
                     <button id="btn-close-live" class="w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center text-white"><i class="fa-solid fa-xmark"></i></button>
                 </div>
 
-                <div class="flex-1 flex items-center justify-center text-center">
-                    <div>
-                        <i class="fa-solid fa-broadcast-tower text-6xl text-rose-500 mb-3 animate-pulse"></i>
-                        <h3 class="text-xl font-bold">You are Live on PrimeX!</h3>
-                        <p class="text-xs text-gray-400">Broadcasting to global followers...</p>
-                    </div>
+                <div class="absolute inset-0 z-0 overflow-hidden flex items-center justify-center">
+                    <video id="liveBroadcasterFeed" class="w-full h-full object-cover" autoplay playsinline muted></video>
+                    <canvas id="giftCanvas" class="absolute inset-0 pointer-events-none z-10"></canvas>
                 </div>
 
-                <!-- Virtual Gifting Bar -->
-                <div class="bg-gray-900/80 backdrop-blur border border-gray-800 rounded-2xl p-3 flex justify-around items-center">
-                    <button onclick="sendVirtualGift('Heart 💖', 5)" class="flex flex-col items-center text-rose-400 hover:scale-110 transition">
+                <div class="bg-gray-900/80 backdrop-blur border border-gray-800 rounded-2xl p-3 flex justify-around items-center z-20">
+                    <button onclick="sendVirtualGift('💖 Heart', 5)" class="flex flex-col items-center text-rose-400 hover:scale-110 transition">
                         <span class="text-xl">💖</span>
                         <span class="text-[9px] font-bold">5 Coins</span>
                     </button>
-                    <button onclick="sendVirtualGift('Crown 👑', 50)" class="flex flex-col items-center text-amber-400 hover:scale-110 transition">
+                    <button onclick="sendVirtualGift('👑 Crown', 50)" class="flex flex-col items-center text-amber-400 hover:scale-110 transition">
                         <span class="text-xl">👑</span>
                         <span class="text-[9px] font-bold">50 Coins</span>
                     </button>
-                    <button onclick="sendVirtualGift('Rocket 🚀', 100)" class="flex flex-col items-center text-indigo-400 hover:scale-110 transition">
+                    <button onclick="sendVirtualGift('🚀 Rocket', 100)" class="flex flex-col items-center text-indigo-400 hover:scale-110 transition">
                         <span class="text-xl">🚀</span>
                         <span class="text-[9px] font-bold">100 Coins</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Direct Messenger Modal (With Audio/Video Call Buttons) -->
+            <!-- Real-Time Chat & WebRTC Video Call Window -->
             <div id="view-chat" class="fixed inset-0 bg-gray-950 z-40 hidden flex flex-col">
                 <div class="h-14 border-b border-gray-800 px-4 flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <button id="btn-close-chat" class="text-gray-400 text-lg"><i class="fa-solid fa-arrow-left"></i></button>
-                        <h3 class="font-bold text-sm">PrimeX Messenger</h3>
+                        <h3 class="font-bold text-sm">Messenger & Video Call</h3>
                     </div>
                     <div class="flex items-center gap-4 text-indigo-400">
-                        <button onclick="triggerCall('Audio')" title="Audio Call"><i class="fa-solid fa-phone text-base"></i></button>
-                        <button onclick="triggerCall('Video')" title="Video Call"><i class="fa-solid fa-video text-base"></i></button>
+                        <button onclick="startRealWebRTCCall('audio')" title="Audio Call"><i class="fa-solid fa-phone text-base"></i></button>
+                        <button onclick="startRealWebRTCCall('video')" title="Video Call"><i class="fa-solid fa-video text-base"></i></button>
                     </div>
                 </div>
+
+                <div id="activeCallOverlay" class="hidden absolute inset-0 bg-black z-50 flex flex-col justify-between p-4">
+                    <div class="relative w-full h-full bg-gray-900 rounded-2xl overflow-hidden flex items-center justify-center">
+                        <video id="remoteCallVideo" class="w-full h-full object-cover" autoplay playsinline></video>
+                        <video id="localCallVideo" class="absolute top-4 right-4 w-28 h-40 bg-black rounded-xl border border-indigo-500 object-cover" autoplay playsinline muted></video>
+                        <button onclick="endWebRTCCall()" class="absolute bottom-6 bg-rose-600 hover:bg-rose-700 text-white p-4 rounded-full text-xl shadow-lg">
+                            <i class="fa-solid fa-phone-slash"></i>
+                        </button>
+                    </div>
+                </div>
+
                 <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3"></div>
                 <div class="p-3 border-t border-gray-800 flex gap-2">
-                    <input type="text" id="chat-input" placeholder="Type a message..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-4 py-2 text-sm focus:outline-none">
+                    <input type="text" id="chat-input" placeholder="Message..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-4 py-2 text-sm focus:outline-none">
                     <button id="btn-send-msg" class="bg-indigo-600 px-4 py-2 rounded-xl text-sm font-bold"><i class="fa-solid fa-paper-plane"></i></button>
                 </div>
             </div>
@@ -263,7 +245,7 @@
 
     </div>
 
-    <!-- Firebase SDK v10 -->
+    <!-- Firebase SDK Modules -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
@@ -281,8 +263,7 @@
             projectId: "primex-e8090",
             storageBucket: "primex-e8090.firebasestorage.app",
             messagingSenderId: "465444221491",
-            appId: "1:465444221491:web:9824b4f1f9f592f76ce946",
-            measurementId: "G-9LRYXH2D6E"
+            appId: "1:465444221491:web:9824b4f1f9f592f76ce946"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -292,6 +273,8 @@
         const googleProvider = new GoogleAuthProvider();
 
         let currentUser = null;
+        let peerConnection = null;
+        let localStream = null;
 
         const authView = document.getElementById('auth-view');
         const appView = document.getElementById('app-view');
@@ -301,12 +284,6 @@
         const uploadModal = document.getElementById('upload-modal');
         const liveModal = document.getElementById('live-stream-modal');
         const uploadStatus = document.getElementById('upload-status');
-        const authError = document.getElementById('auth-error');
-
-        const showError = (msg) => {
-            authError.textContent = msg;
-            authError.classList.remove('hidden');
-        };
 
         window.switchTab = (tab) => {
             ['home', 'explore', 'wallet', 'profile'].forEach(t => {
@@ -326,9 +303,10 @@
                 appView.classList.remove('hidden');
                 bottomNav.classList.remove('hidden');
                 userHeaderActions.classList.remove('hidden');
-                document.getElementById('profile-name').textContent = user.displayName || user.email;
+                document.getElementById('profile-name').textContent = user.displayName || user.email.split('@')[0];
                 document.getElementById('profile-avatar').textContent = (user.displayName || user.email).charAt(0).toUpperCase();
                 loadPosts();
+                syncUserWallet();
             } else {
                 currentUser = null;
                 authView.classList.remove('hidden');
@@ -338,52 +316,130 @@
             }
         });
 
-        document.getElementById('btn-google').addEventListener('click', () => signInWithPopup(auth, googleProvider).catch(e => showError(e.message)));
+        document.getElementById('btn-google').addEventListener('click', () => signInWithPopup(auth, googleProvider));
         document.getElementById('auth-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value).catch(e => showError(e.message));
+            signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value);
         });
         document.getElementById('btn-signup').addEventListener('click', () => {
-            createUserWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value).catch(e => showError(e.message));
+            createUserWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value);
         });
         document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
 
-        // Live Stream Modal
-        document.getElementById('btn-go-live').addEventListener('click', () => liveModal.classList.remove('hidden'));
-        document.getElementById('btn-close-live').addEventListener('click', () => liveModal.classList.add('hidden'));
+        // Live Broadcasting & Gifting
+        document.getElementById('btn-go-live').addEventListener('click', async () => {
+            liveModal.classList.remove('hidden');
+            try {
+                localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                document.getElementById('liveBroadcasterFeed').srcObject = localStream;
+            } catch(e) { console.error(e); }
+        });
 
-        // Upload Modal
+        document.getElementById('btn-close-live').addEventListener('click', () => {
+            liveModal.classList.add('hidden');
+            if(localStream) localStream.getTracks().forEach(track => track.stop());
+        });
+
+        const canvas = document.getElementById('giftCanvas');
+        const ctx = canvas.getContext('2d');
+        let giftParticles = [];
+
+        window.sendVirtualGift = (giftName, coins) => {
+            updateUserCoins(coins);
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            for(let i=0; i<20; i++) {
+                giftParticles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2,
+                    vx: (Math.random() - 0.5) * 6,
+                    vy: (Math.random() - 0.5) * 6,
+                    size: Math.random() * 24 + 12,
+                    text: giftName.split(' ')[0]
+                });
+            }
+            requestAnimationFrame(renderGiftParticles);
+        };
+
+        function renderGiftParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            giftParticles.forEach((p, index) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.size *= 0.95;
+                ctx.font = `${p.size}px serif`;
+                ctx.fillText(p.text, p.x, p.y);
+                if(p.size < 2) giftParticles.splice(index, 1);
+            });
+            if(giftParticles.length > 0) requestAnimationFrame(renderGiftParticles);
+        }
+
+        // WebRTC Real Call Signaling
+        window.startRealWebRTCCall = async (type) => {
+            document.getElementById('activeCallOverlay').classList.remove('hidden');
+            peerConnection = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+            const mediaStream = await navigator.mediaDevices.getUserMedia({ video: type === 'video', audio: true });
+            document.getElementById('localCallVideo').srcObject = mediaStream;
+            mediaStream.getTracks().forEach(track => peerConnection.addTrack(track, mediaStream));
+            peerConnection.ontrack = (e) => {
+                document.getElementById('remoteCallVideo').srcObject = e.streams[0];
+            };
+        };
+
+        window.endWebRTCCall = () => {
+            if(peerConnection) peerConnection.close();
+            document.getElementById('activeCallOverlay').classList.add('hidden');
+        };
+
+        // Wallet Sync & Payout Request
+        function syncUserWallet() {
+            onValue(ref(db, `users/${currentUser.uid}/coins`), (snapshot) => {
+                const coins = snapshot.val() || 0;
+                document.getElementById('wallet-coins').textContent = coins;
+                document.getElementById('profile-coins').textContent = coins;
+                document.getElementById('wallet-pkr').textContent = `${(coins * 0.5).toFixed(1)} PKR`;
+            });
+        }
+
+        function updateUserCoins(amount) {
+            if(!currentUser) return;
+            const currentCoins = parseInt(document.getElementById('wallet-coins').textContent || '0');
+            set(ref(db, `users/${currentUser.uid}/coins`), currentCoins + amount);
+        }
+
+        window.requestWithdrawal = (method) => {
+            const acc = document.getElementById('withdraw-account').value.trim();
+            const coins = parseInt(document.getElementById('wallet-coins').textContent || '0');
+            if(!acc) return alert("Enter valid account details!");
+            if(coins < 50) return alert("Minimum withdrawal threshold is 50 Coins!");
+
+            push(ref(db, 'payoutRequests'), {
+                uid: currentUser.uid,
+                account: acc,
+                method: method,
+                coins: coins,
+                pkrAmount: coins * 0.5,
+                timestamp: Date.now()
+            }).then(() => {
+                alert(`Payout request of ${coins * 0.5} PKR submitted successfully!`);
+                set(ref(db, `users/${currentUser.uid}/coins`), 0);
+            });
+        };
+
+        // Post Upload Mechanics
         const toggleModal = (show) => uploadModal.classList.toggle('hidden', !show);
         document.getElementById('btn-create-post').addEventListener('click', () => toggleModal(true));
         document.getElementById('nav-btn-create').addEventListener('click', () => toggleModal(true));
         document.getElementById('close-modal').addEventListener('click', () => toggleModal(false));
 
-        // Direct Messaging
         document.getElementById('btn-open-chat').addEventListener('click', () => document.getElementById('view-chat').classList.remove('hidden'));
         document.getElementById('btn-close-chat').addEventListener('click', () => document.getElementById('view-chat').classList.add('hidden'));
 
-        // Virtual Gift Helper
-        window.sendVirtualGift = (giftName, coins) => {
-            const walletEl = document.getElementById('wallet-coins');
-            const newCoins = parseInt(walletEl.textContent) + coins;
-            walletEl.textContent = newCoins;
-            document.getElementById('wallet-pkr').textContent = `${(newCoins * 0.5).toFixed(1)} PKR`;
-            alert(`Sent ${giftName}! Added ${coins} coins to Creator Balance.`);
-        };
-
-        // Call Trigger Helper
-        window.triggerCall = (type) => {
-            alert(`Initiating High-Definition PrimeX ${type} Call...`);
-        };
-
-        // Submit Post with Music Selection
         document.getElementById('btn-submit-post').addEventListener('click', async () => {
             const caption = document.getElementById('post-caption').value.trim();
-            const musicTrack = document.getElementById('post-music-select').value;
             const fileInput = document.getElementById('post-file-input');
             const file = fileInput.files[0];
-
-            if (!file) return alert("Please select a file to upload!");
+            if (!file) return alert("Select media file to upload!");
 
             uploadStatus.classList.remove('hidden');
 
@@ -398,7 +454,6 @@
                     uid: currentUser.uid,
                     author: currentUser.displayName || currentUser.email.split('@')[0],
                     caption: caption,
-                    musicTrack: musicTrack,
                     mediaUrl: mediaUrl,
                     mediaType: file.type.startsWith('video') ? 'video' : 'image',
                     likesCount: 0,
@@ -412,7 +467,7 @@
                 toggleModal(false);
             } catch (err) {
                 uploadStatus.classList.add('hidden');
-                alert("Upload failed: " + err.message);
+                alert(err.message);
             }
         });
 
@@ -440,7 +495,6 @@
 
                     const postCard = document.createElement('div');
                     postCard.className = 'reel-item h-full w-full relative flex flex-col justify-between bg-gray-900 border-b border-gray-800';
-                    
                     postCard.innerHTML = `
                         <div class="absolute inset-0 z-0 flex items-center justify-center bg-black">
                             ${post.mediaType === 'video' ? 
@@ -477,7 +531,7 @@
 
                         <div class="relative z-20 p-4 mb-2">
                             <p class="text-sm font-medium mb-1">${post.caption || ''}</p>
-                            <span class="text-[11px] text-indigo-400 font-semibold"><i class="fa-solid fa-music text-xs mr-1"></i> ${post.musicTrack || 'PrimeX Original Sound'}</span>
+                            <span class="text-[11px] text-indigo-400 font-semibold"><i class="fa-solid fa-music text-xs mr-1"></i> Original Audio</span>
                         </div>
                     `;
                     reelsFeed.appendChild(postCard);
@@ -491,10 +545,7 @@
 
         window.tipCreator = (postId, currentTips) => {
             update(ref(db, `posts/${postId}`), { tipsCount: currentTips + 1 });
-            const walletEl = document.getElementById('wallet-coins');
-            const currentCoins = parseInt(walletEl.textContent) + 10;
-            walletEl.textContent = currentCoins;
-            document.getElementById('wallet-pkr').textContent = `${(currentCoins * 0.5).toFixed(1)} PKR`;
+            updateUserCoins(10);
         };
     </script>
 </body>
