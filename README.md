@@ -19,7 +19,8 @@
   <!-- TOP NAVIGATION BAR -->
   <nav class="sticky top-0 z-50 glassmorphism border-b border-gray-800 px-4 py-3 flex justify-between items-center">
     <div class="flex items-center space-x-3">
-      <h1 class="text-2xl font-extrabold tracking-wider bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 bg-clip-text text-transparent">
+      <!-- SECRET ADMIN TRIGGER: 5 Taps on Logo -->
+      <h1 id="secretLogoBtn" onclick="handleLogoTap()" class="cursor-pointer text-2xl font-extrabold tracking-wider bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 bg-clip-text text-transparent select-none">
         PrimeX
       </h1>
     </div>
@@ -28,10 +29,7 @@
     </div>
     <div id="userNavProfile" class="hidden flex items-center space-x-4">
       <button onclick="openDepositModal()" class="bg-gradient-to-r from-green-500 to-emerald-600 text-xs font-bold px-3 py-2 rounded-lg hover:opacity-90 flex items-center gap-1">
-        <i class="fa-solid font-bold fa-wallet"></i> Deposit
-      </button>
-      <button id="eagleEyeBtn" onclick="toggleAdminPanel()" class="hidden bg-purple-600 hover:bg-purple-700 text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1">
-        <i class="fa-solid fa-eye"></i> EagleEye
+        <i class="fa-solid fa-wallet"></i> Deposit
       </button>
       <span id="navUserName" class="text-sm font-medium text-gray-300"></span>
       <button onclick="logout()" class="text-gray-400 hover:text-red-400 text-sm"><i class="fa-solid fa-right-from-bracket"></i></button>
@@ -48,7 +46,7 @@
           <i class="fa-solid fa-house text-blue-500 text-lg"></i> <span class="font-medium">Feed</span>
         </a>
         <a href="#" class="flex items-center space-x-3 text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-800/50 transition">
-          <i class="fa-solid fa-fire text-red-500 text-lg"></i> <span class="font-medium">Trending</span>
+          <i class="fa-solid fa-video text-red-500 text-lg"></i> <span class="font-medium">Reels / TikTok</span>
         </a>
         <a href="#" class="flex items-center space-x-3 text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-800/50 transition">
           <i class="fa-solid fa-wallet text-emerald-500 text-lg"></i> <span class="font-medium">Wallet & Funds</span>
@@ -61,7 +59,7 @@
       
       <!-- CREATE POST BOX -->
       <div class="glassmorphism p-4 rounded-xl space-y-3">
-        <textarea id="postInput" rows="2" placeholder="What's happening on PrimeX?" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-sm focus:outline-none focus:border-blue-500 resize-none"></textarea>
+        <textarea id="postInput" rows="2" placeholder="What's happening on PrimeX, sweetie?" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-sm focus:outline-none focus:border-blue-500 resize-none"></textarea>
         <div class="flex justify-between items-center pt-2">
           <div class="flex space-x-3 text-gray-400">
             <button class="hover:text-blue-400"><i class="fa-regular fa-image"></i></button>
@@ -71,16 +69,30 @@
         </div>
       </div>
 
-      <!-- EAGLE EYE ADMIN PANEL (HIDDEN BY DEFAULT) -->
-      <section id="eagleEyePanel" class="hidden glassmorphism p-5 rounded-xl border border-purple-500/30 space-y-4">
+      <!-- EAGLE EYE ADMIN PANEL (HIDDEN UNLESS UNLOCKED VIA 5 TAPS + KEY 5426) -->
+      <section id="eagleEyePanel" class="hidden glassmorphism p-5 rounded-xl border border-purple-500/30 space-y-6">
         <div class="flex justify-between items-center border-b border-gray-800 pb-3">
           <h2 class="text-lg font-bold text-purple-400 flex items-center gap-2">
-            <i class="fa-solid fa-eye"></i> EagleEye Administration
+            <i class="fa-solid fa-shield-halved"></i> EagleEye Admin Master Control
           </h2>
-          <span class="text-xs bg-purple-900/50 text-purple-300 px-2.5 py-1 rounded-full border border-purple-700">Live Oversight</span>
+          <button onclick="lockAdminPanel()" class="text-xs bg-red-900/40 text-red-400 border border-red-700 px-2.5 py-1 rounded-lg">Lock Panel</button>
         </div>
-        <div id="depositRequestsContainer" class="space-y-3 custom-scrollbar max-h-96 overflow-y-auto">
-          <p class="text-gray-400 text-xs">Loading deposit requests...</p>
+
+        <!-- Sub Tabs inside Admin Panel -->
+        <div class="space-y-4">
+          <div>
+            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pending Deposit Requests</h3>
+            <div id="depositRequestsContainer" class="space-y-3 custom-scrollbar max-h-60 overflow-y-auto">
+              <p class="text-gray-400 text-xs">Loading deposits...</p>
+            </div>
+          </div>
+
+          <div class="border-t border-gray-800 pt-4">
+            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Registered Users Database</h3>
+            <div id="adminUsersContainer" class="space-y-2 custom-scrollbar max-h-60 overflow-y-auto">
+              <!-- Users list rendered dynamically -->
+            </div>
+          </div>
         </div>
       </section>
 
@@ -92,11 +104,13 @@
 
     <!-- RIGHT SIDEBAR -->
     <aside class="hidden md:block col-span-1 space-y-4">
-      <div class="glassmorphism p-4 rounded-xl">
-        <h3 class="font-bold text-sm text-gray-400 mb-3">Notice Board</h3>
-        <p class="text-xs text-gray-300 leading-relaxed">
-          Welcome to <strong class="text-blue-400">PrimeX</strong>. Deposit approval process takes 5–15 minutes after submission. Always re-check Payment TIDs!
-        </p>
+      <div class="glassmorphism p-4 rounded-xl space-y-3">
+        <h3 class="font-bold text-sm text-gray-400">Trending Topics</h3>
+        <div class="space-y-2 text-xs">
+          <p class="text-blue-400 font-semibold">#PrimeXLaunch</p>
+          <p class="text-gray-300">#EasyPaisaJazzCash</p>
+          <p class="text-gray-300">#NextGenSocial</p>
+        </div>
       </div>
     </aside>
   </div>
@@ -122,7 +136,21 @@
     </div>
   </div>
 
-  <!-- DEPOSIT MODAL (MANUAL PAYMENT SYSTEM) -->
+  <!-- SECRET ADMIN KEY MODAL -->
+  <div id="adminKeyModal" class="fixed inset-0 bg-black/90 hidden items-center justify-center p-4 z-50">
+    <div class="glassmorphism max-w-sm w-full p-6 rounded-2xl space-y-4 text-center">
+      <i class="fa-solid fa-lock text-3xl text-purple-400"></i>
+      <h2 class="text-lg font-bold">EagleEye Security Check</h2>
+      <p class="text-xs text-gray-400">Enter master access key to open admin control panel.</p>
+      <input id="adminKeyInput" type="password" placeholder="Enter Key (e.g. 5426)" class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded-lg text-center tracking-widest text-sm focus:outline-none focus:border-purple-500" />
+      <div class="flex space-x-2">
+        <button onclick="verifyAdminKey()" class="flex-1 bg-purple-600 hover:bg-purple-700 py-2 rounded-lg text-xs font-bold">Unlock</button>
+        <button onclick="toggleModal('adminKeyModal')" class="flex-1 bg-gray-800 hover:bg-gray-700 py-2 rounded-lg text-xs">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEPOSIT MODAL -->
   <div id="depositModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
     <div class="glassmorphism max-w-lg w-full p-6 rounded-2xl space-y-4 relative custom-scrollbar max-h-[90vh] overflow-y-auto">
       <button onclick="toggleModal('depositModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
@@ -164,7 +192,7 @@
     </div>
   </div>
 
-  <!-- FIREBASE MODULE & LOGIC -->
+  <!-- FIREBASE LOGIC -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
@@ -188,37 +216,30 @@
     const db = getDatabase(app);
     const googleProvider = new GoogleAuthProvider();
 
-    // Set global admin emails (Add your email here)
-    const ADMIN_EMAILS = ["admin@primex.com"];
-
     let currentUser = null;
 
-    // Authentication Listeners
     onAuthStateChanged(auth, (user) => {
       currentUser = user;
       if (user) {
         document.getElementById('authNavButtons').classList.add('hidden');
         document.getElementById('userNavProfile').classList.remove('hidden');
         document.getElementById('navUserName').innerText = user.displayName || user.email.split('@')[0];
-        
-        // Admin privilege check
-        if (ADMIN_EMAILS.includes(user.email)) {
-          document.getElementById('eagleEyeBtn').classList.remove('hidden');
-          listenToEagleEye();
-        }
+
+        // Track user registration in DB
+        set(ref(db, `users/${user.uid}`), {
+          email: user.email,
+          name: user.displayName || user.email.split('@')[0],
+          lastLogin: Date.now(),
+          status: 'active'
+        });
       } else {
         document.getElementById('authNavButtons').classList.remove('hidden');
         document.getElementById('userNavProfile').classList.add('hidden');
-        document.getElementById('eagleEyeBtn').classList.add('hidden');
       }
     });
 
-    // Auth Functions
     window.loginWithGoogle = async () => {
-      try {
-        await signInWithPopup(auth, googleProvider);
-        toggleModal('authModal');
-      } catch (err) { alert(err.message); }
+      try { await signInWithPopup(auth, googleProvider); toggleModal('authModal'); } catch (err) { alert(err.message); }
     };
 
     window.loginWithEmail = async () => {
@@ -229,114 +250,127 @@
         await signInWithEmailAndPassword(auth, email, pass);
         toggleModal('authModal');
       } catch (err) {
-        // Auto sign up if user doesn't exist
-        try {
-          await createUserWithEmailAndPassword(auth, email, pass);
-          toggleModal('authModal');
-        } catch (e) { alert(e.message); }
+        try { await createUserWithEmailAndPassword(auth, email, pass); toggleModal('authModal'); } catch (e) { alert(e.message); }
       }
     };
 
     window.logout = () => signOut(auth);
 
-    // Deposit Submission System (Base64 Proof Processing)
+    // Manual Deposit System
     window.submitDeposit = async () => {
       if (!currentUser) return alert("Please login first, sweetie!");
-      
       const method = document.getElementById('depositMethod').value;
       const amount = document.getElementById('depositAmount').value;
       const tid = document.getElementById('depositTID').value;
       const fileInput = document.getElementById('depositProof');
 
-      if (!amount || !tid || !fileInput.files[0]) return alert("All deposit fields & proof image are required!");
+      if (!amount || !tid || !fileInput.files[0]) return alert("All fields & proof are required!");
 
-      const file = fileInput.files[0];
       const reader = new FileReader();
-
       reader.onloadend = async () => {
-        const base64Image = reader.result;
-        const newDepositRef = push(ref(db, 'deposits'));
-        await set(newDepositRef, {
-          id: newDepositRef.key,
+        const newRef = push(ref(db, 'deposits'));
+        await set(newRef, {
+          id: newRef.key,
           uid: currentUser.uid,
           userEmail: currentUser.email,
-          method: method,
-          amount: amount,
-          tid: tid,
-          proofBase64: base64Image,
+          method, amount, tid,
+          proofBase64: reader.result,
           status: 'pending',
           timestamp: Date.now()
         });
-
-        alert("Deposit submitted! Admin will verify soon.");
+        alert("Deposit submitted successfully!");
         toggleModal('depositModal');
       };
-
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(fileInput.files[0]);
     };
 
-    // EagleEye Admin Realtime Stream & Actions
-    function listenToEagleEye() {
+    // Secret Tap Counter logic for Logo
+    let tapCount = 0;
+    let tapTimer = null;
+    window.handleLogoTap = () => {
+      tapCount++;
+      clearTimeout(tapTimer);
+      tapTimer = setTimeout(() => { tapCount = 0; }, 1000); // Reset within 1 sec
+
+      if (tapCount >= 5) {
+        tapCount = 0;
+        toggleModal('adminKeyModal');
+      }
+    };
+
+    window.verifyAdminKey = () => {
+      const key = document.getElementById('adminKeyInput').value;
+      if (key === "5426") {
+        toggleModal('adminKeyModal');
+        document.getElementById('eagleEyePanel').classList.remove('hidden');
+        loadEagleEyeData();
+        alert("EagleEye Admin Panel Unlocked Successfully!");
+      } else {
+        alert("Invalid Security Key!");
+      }
+    };
+
+    window.lockAdminPanel = () => {
+      document.getElementById('eagleEyePanel').classList.add('hidden');
+    };
+
+    function loadEagleEyeData() {
+      // Load Deposits
       onValue(ref(db, 'deposits'), (snapshot) => {
         const container = document.getElementById('depositRequestsContainer');
         container.innerHTML = '';
         const data = snapshot.val();
-        
-        if (!data) {
-          container.innerHTML = `<p class="text-xs text-gray-500">No deposit logs found.</p>`;
-          return;
-        }
+        if (!data) { container.innerHTML = `<p class="text-xs text-gray-500">No deposits found.</p>`; return; }
 
         Object.values(data).reverse().forEach((item) => {
-          const card = document.createElement('div');
-          card.className = "p-3 bg-gray-900/90 rounded-lg border border-gray-800 space-y-2 text-xs";
-          card.innerHTML = `
-            <div class="flex justify-between items-start">
-              <div>
-                <p class="font-bold text-gray-200">${item.userEmail}</p>
-                <p class="text-gray-400">${item.method} • <span class="text-emerald-400 font-bold">PKR ${item.amount}</span></p>
-                <p class="text-gray-400 font-mono">TID: ${item.tid}</p>
-              </div>
-              <span class="px-2 py-0.5 rounded text-[10px] uppercase font-bold ${
-                item.status === 'approved' ? 'bg-green-900/40 text-green-400 border border-green-800' :
-                item.status === 'rejected' ? 'bg-red-900/40 text-red-400 border border-red-800' :
-                'bg-yellow-900/40 text-yellow-400 border border-yellow-800'
-              }">${item.status}</span>
+          const div = document.createElement('div');
+          div.className = "p-3 bg-gray-900 rounded-lg border border-gray-800 space-y-2 text-xs";
+          div.innerHTML = `
+            <div class="flex justify-between">
+              <div><p class="font-bold">${item.userEmail}</p><p class="text-emerald-400">${item.method}: PKR ${item.amount}</p><p class="font-mono text-gray-400">TID: ${item.tid}</p></div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${item.status === 'approved' ? 'bg-green-900/40 text-green-400' : item.status === 'rejected' ? 'bg-red-900/40 text-red-400' : 'bg-yellow-900/40 text-yellow-400'}">${item.status}</span>
             </div>
-            ${item.proofBase64 ? `<img src="${item.proofBase64}" class="w-full h-24 object-cover rounded border border-gray-800" />` : ''}
-            ${item.status === 'pending' ? `
-              <div class="flex space-x-2 pt-1">
-                <button onclick="updateDepositStatus('${item.id}', 'approved')" class="flex-1 bg-green-600 hover:bg-green-700 py-1 rounded font-bold text-white">Approve</button>
-                <button onclick="updateDepositStatus('${item.id}', 'rejected')" class="flex-1 bg-red-600 hover:bg-red-700 py-1 rounded font-bold text-white">Reject</button>
-              </div>
-            ` : ''}
+            ${item.proofBase64 ? `<img src="${item.proofBase64}" class="w-full h-20 object-cover rounded" />` : ''}
+            ${item.status === 'pending' ? `<div class="flex space-x-2"><button onclick="updateStatus('${item.id}', 'approved')" class="flex-1 bg-green-600 py-1 rounded text-white font-bold">Approve</button><button onclick="updateStatus('${item.id}', 'rejected')" class="flex-1 bg-red-600 py-1 rounded text-white font-bold">Reject</button></div>` : ''}
           `;
-          container.appendChild(card);
+          container.appendChild(div);
+        });
+      });
+
+      // Load Users Database
+      onValue(ref(db, 'users'), (snapshot) => {
+        const container = document.getElementById('adminUsersContainer');
+        container.innerHTML = '';
+        const data = snapshot.val();
+        if (!data) return;
+
+        Object.entries(data).forEach(([uid, user]) => {
+          const div = document.createElement('div');
+          div.className = "p-2.5 bg-gray-900 rounded-lg border border-gray-800 flex justify-between items-center text-xs";
+          div.innerHTML = `
+            <div><p class="font-bold text-gray-200">${user.name}</p><p class="text-gray-400">${user.email}</p></div>
+            <span class="text-emerald-400 font-semibold uppercase text-[10px] bg-emerald-950 px-2 py-0.5 rounded">${user.status || 'Active'}</span>
+          `;
+          container.appendChild(div);
         });
       });
     }
 
-    window.updateDepositStatus = async (id, status) => {
-      await update(ref(db, `deposits/${id}`), { status: status });
+    window.updateStatus = async (id, status) => {
+      await update(ref(db, `deposits/${id}`), { status });
     };
 
-    // Feed Post Actions
+    // Posts Feed System
     window.submitPost = async () => {
-      if (!currentUser) return alert("Please login to post!");
-      const text = document.getElementById('postInput').value;
-      if (!text) return;
+      if (!currentUser) return alert("Please login first!");
+      const content = document.getElementById('postInput').value;
+      if (!content) return;
 
       const postRef = push(ref(db, 'posts'));
-      await set(postRef, {
-        author: currentUser.displayName || currentUser.email.split('@')[0],
-        content: text,
-        timestamp: Date.now()
-      });
-
+      await set(postRef, { author: currentUser.displayName || currentUser.email.split('@')[0], content, timestamp: Date.now() });
       document.getElementById('postInput').value = '';
     };
 
-    // Realtime Posts Stream
     onValue(ref(db, 'posts'), (snapshot) => {
       const feed = document.getElementById('postsFeed');
       feed.innerHTML = '';
@@ -351,12 +385,9 @@
             <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center font-bold text-xs">
               ${post.author.charAt(0).toUpperCase()}
             </div>
-            <div>
-              <p class="text-sm font-bold">${post.author}</p>
-              <p class="text-[10px] text-gray-500">${new Date(post.timestamp).toLocaleTimeString()}</p>
-            </div>
+            <div><p class="text-sm font-bold">${post.author}</p><p class="text-[10px] text-gray-500">${new Date(post.timestamp).toLocaleTimeString()}</p></div>
           </div>
-          <p class="text-sm text-gray-300 leading-normal">${post.content}</p>
+          <p class="text-sm text-gray-300">${post.content}</p>
         `;
         feed.appendChild(el);
       });
@@ -364,17 +395,12 @@
   </script>
 
   <script>
-    // Modal Helpers
     function toggleModal(id) {
       const el = document.getElementById(id);
       el.classList.toggle('hidden');
       el.classList.toggle('flex');
     }
     function openDepositModal() { toggleModal('depositModal'); }
-    function toggleAdminPanel() {
-      const panel = document.getElementById('eagleEyePanel');
-      panel.classList.toggle('hidden');
-    }
   </script>
 </body>
 </html>
