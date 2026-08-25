@@ -2,7 +2,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PrimeX - Earning & Social Network</title>
+  <title>PrimeX - Paid Monetization & Social Network</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome -->
@@ -23,7 +23,7 @@
     <div class="flex items-center space-x-3">
       <!-- SECRET ADMIN TRIGGER: 5 Taps on Logo -->
       <h1 id="secretLogoBtn" onclick="handleLogoTap()" class="cursor-pointer text-2xl font-extrabold tracking-wider bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 bg-clip-text text-transparent select-none">
-        PrimeX
+        PrimeX <span class="text-[10px] bg-amber-500 text-black px-1.5 py-0.5 rounded font-bold uppercase">Pro Ads</span>
       </h1>
     </div>
     <div id="authNavButtons" class="flex items-center space-x-3">
@@ -34,9 +34,12 @@
         <i class="fa-solid fa-coins"></i> <span id="navWalletBalance">PKR 0</span>
       </button>
       <button onclick="openDepositModal()" class="bg-gradient-to-r from-green-500 to-emerald-600 text-xs font-bold px-3 py-1.5 rounded-lg hover:opacity-90 flex items-center gap-1">
-        <i class="fa-solid fa-wallet"></i> Deposit
+        <i class="fa-solid fa-wallet"></i> Top-up / Add Funds
       </button>
-      <span id="navUserName" class="text-sm font-medium text-gray-300"></span>
+      <div class="flex items-center gap-1">
+        <span id="navUserName" class="text-sm font-medium text-gray-300"></span>
+        <span id="navVerifiedBadge" class="hidden text-blue-400 text-xs" title="Verified Creator"><i class="fa-solid fa-circle-check"></i></span>
+      </div>
       <button onclick="logout()" class="text-gray-400 hover:text-red-400 text-sm"><i class="fa-solid fa-right-from-bracket"></i></button>
     </div>
   </nav>
@@ -51,10 +54,13 @@
           <i class="fa-solid fa-house text-blue-500 text-lg"></i> <span class="font-medium">Home Feed</span>
         </button>
         <button onclick="switchTab('reels')" class="w-full flex items-center space-x-3 text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-800/50 transition">
-          <i class="fa-solid fa-clapperboard text-red-500 text-lg"></i> <span class="font-medium">Prime Reels (TikTok)</span>
+          <i class="fa-solid fa-clapperboard text-red-500 text-lg"></i> <span class="font-medium">Prime Reels</span>
+        </button>
+        <button onclick="openVerifyModal()" class="w-full flex items-center space-x-3 text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-800/50 transition">
+          <i class="fa-solid fa-certificate text-blue-400 text-lg"></i> <span class="font-medium">Get Verified Badge</span>
         </button>
         <button onclick="openWalletModal()" class="w-full flex items-center space-x-3 text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-800/50 transition">
-          <i class="fa-solid fa-wallet text-amber-500 text-lg"></i> <span class="font-medium">Creator Earnings</span>
+          <i class="fa-solid fa-wallet text-amber-500 text-lg"></i> <span class="font-medium">Wallet & Monetization</span>
         </button>
       </div>
     </aside>
@@ -65,11 +71,10 @@
       <!-- TAB 1: HOME FEED -->
       <div id="feedTab" class="space-y-6">
         
-        <!-- CREATE POST BOX (PHONE STORAGE UPLOAD) -->
+        <!-- CREATE POST BOX -->
         <div class="glassmorphism p-4 rounded-xl space-y-3">
           <textarea id="postInput" rows="2" placeholder="What's happening on PrimeX, sweetie?" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-sm focus:outline-none focus:border-blue-500 resize-none"></textarea>
           
-          <!-- Image/Video Preview Container -->
           <div id="mediaPreviewContainer" class="hidden relative">
             <img id="imagePreview" class="w-full h-40 object-cover rounded-lg hidden" />
             <video id="videoPreview" class="w-full h-40 object-cover rounded-lg hidden" controls></video>
@@ -85,7 +90,7 @@
           </div>
         </div>
 
-        <!-- EAGLE EYE ADMIN PANEL (HIDDEN UNTIL UNLOCKED) -->
+        <!-- EAGLE EYE ADMIN PANEL -->
         <section id="eagleEyePanel" class="hidden glassmorphism p-5 rounded-xl border border-purple-500/30 space-y-6">
           <div class="flex justify-between items-center border-b border-gray-800 pb-3">
             <h2 class="text-lg font-bold text-purple-400 flex items-center gap-2">
@@ -95,23 +100,21 @@
           </div>
           <div class="space-y-4">
             <div>
-              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pending Deposits</h3>
+              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pending Fund Deposits (Top-ups)</h3>
               <div id="depositRequestsContainer" class="space-y-3 custom-scrollbar max-h-48 overflow-y-auto"></div>
             </div>
             <div class="border-t border-gray-800 pt-4">
-              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pending Earning Withdrawals</h3>
+              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pending Creator Withdrawals</h3>
               <div id="withdrawRequestsContainer" class="space-y-3 custom-scrollbar max-h-48 overflow-y-auto"></div>
             </div>
           </div>
         </section>
 
         <!-- FEED POSTS CONTAINER -->
-        <section id="postsFeed" class="space-y-4">
-          <!-- Dynamically Rendered -->
-        </section>
+        <section id="postsFeed" class="space-y-4"></section>
       </div>
 
-      <!-- TAB 2: TIKTOK / REELS FEED -->
+      <!-- TAB 2: REELS FEED -->
       <div id="reelsTab" class="hidden space-y-4">
         <div class="flex justify-between items-center">
           <h2 class="text-lg font-bold text-red-400 flex items-center gap-2">
@@ -121,21 +124,69 @@
             <i class="fa-solid fa-plus"></i> Upload Reel
           </button>
         </div>
-        <div id="reelsContainer" class="h-[600px] overflow-y-scroll reel-snap rounded-2xl glassmorphism space-y-4 custom-scrollbar p-2">
-          <!-- Vertical Video Cards Rendered Here -->
-        </div>
+        <div id="reelsContainer" class="h-[600px] overflow-y-scroll reel-snap rounded-2xl glassmorphism space-y-4 custom-scrollbar p-2"></div>
       </div>
     </main>
 
-    <!-- RIGHT SIDEBAR -->
+    <!-- RIGHT SIDEBAR: PAID MONETIZATION PROMOTIONS -->
     <aside class="hidden md:block col-span-1 space-y-4">
-      <div class="glassmorphism p-4 rounded-xl space-y-3">
-        <h3 class="font-bold text-sm text-yellow-400 flex items-center gap-1"><i class="fa-solid fa-bolt"></i> Creator Monetization</h3>
+      <div class="glassmorphism p-4 rounded-xl space-y-3 border border-amber-500/30">
+        <h3 class="font-bold text-sm text-amber-400 flex items-center gap-1"><i class="fa-solid fa-bullhorn"></i> Paid Ad Booster</h3>
         <p class="text-xs text-gray-300 leading-relaxed">
-          Upload engaging videos and get rewarded! Every view and like increases your earning balance instantly. Withdraw via EasyPaisa/JazzCash.
+          Want maximum reach? Boost your posts or reels to appear on top of all users' feeds with paid monetization plans (Starting @ PKR 300).
         </p>
+        <button onclick="openBoostInfo()" class="w-full bg-gradient-to-r from-amber-500 to-yellow-600 text-black font-bold py-2 rounded-lg text-xs">Learn More & Boost</button>
+      </div>
+      <div class="glassmorphism p-4 rounded-xl space-y-2">
+        <h3 class="font-bold text-xs text-blue-400 flex items-center gap-1"><i class="fa-solid fa-shield-check"></i> Verified Creator Program</h3>
+        <p class="text-[11px] text-gray-400">Get the official blue checkmark badge on your profile and increase user trust.</p>
+        <button onclick="openVerifyModal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 rounded-lg text-xs">Apply Now (Paid)</button>
       </div>
     </aside>
+  </div>
+
+  <!-- BOOST POST MODAL -->
+  <div id="boostModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
+    <div class="glassmorphism max-w-sm w-full p-6 rounded-2xl space-y-4 relative">
+      <button onclick="toggleModal('boostModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      <h2 class="text-lg font-bold text-center text-amber-400">Boost Post (Paid Ad)</h2>
+      <p class="text-xs text-gray-300 text-center">Select your budget to pin this post on top of user feeds for 24 hours.</p>
+      <input id="boostPostKey" type="hidden" />
+      <select id="boostPackage" class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded-lg text-xs">
+        <option value="300">Basic Boost - PKR 300 (1,000 Impressions)</option>
+        <option value="750">Super Boost - PKR 750 (5,000 Impressions)</option>
+        <option value="1500">Mega VIP Boost - PKR 1500 (15,000 Impressions)</option>
+      </select>
+      <button onclick="confirmBoostPost()" class="w-full bg-amber-600 hover:bg-amber-700 py-2.5 rounded-lg text-xs font-bold text-black">Pay & Launch Boost</button>
+    </div>
+  </div>
+
+  <!-- VERIFIED BADGE MODAL -->
+  <div id="verifyModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
+    <div class="glassmorphism max-w-sm w-full p-6 rounded-2xl space-y-4 text-center relative">
+      <button onclick="toggleModal('verifyModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      <i class="fa-solid fa-certificate text-4xl text-blue-400"></i>
+      <h2 class="text-lg font-bold">Get Verified Blue Tick</h2>
+      <p class="text-xs text-gray-300">Unlock official credibility on PrimeX for a one-time verification fee of <strong>PKR 999</strong>.</p>
+      <button onclick="purchaseVerification()" class="w-full bg-blue-600 hover:bg-blue-700 py-2.5 rounded-lg text-xs font-bold">Pay & Get Verified</button>
+    </div>
+  </div>
+
+  <!-- SEND GIFT / SUPER THANKS MODAL -->
+  <div id="giftModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
+    <div class="glassmorphism max-w-sm w-full p-6 rounded-2xl space-y-4 text-center relative">
+      <button onclick="toggleModal('giftModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      <i class="fa-solid fa-gift text-4xl text-pink-400"></i>
+      <h2 class="text-lg font-bold">Send Creator Gift</h2>
+      <p class="text-xs text-gray-300">Support this creator directly from your wallet balance.</p>
+      <input id="giftTargetUid" type="hidden" />
+      <select id="giftAmount" class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded-lg text-xs">
+        <option value="50">Rose (PKR 50)</option>
+        <option value="200">Coffee (PKR 200)</option>
+        <option value="500">Super Car (PKR 500)</option>
+      </select>
+      <button onclick="confirmSendGift()" class="w-full bg-pink-600 hover:bg-pink-700 py-2.5 rounded-lg text-xs font-bold">Send Gift Now</button>
+    </div>
   </div>
 
   <!-- UPLOAD REEL MODAL -->
@@ -156,17 +207,16 @@
   <div id="walletModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
     <div class="glassmorphism max-w-md w-full p-6 rounded-2xl space-y-4 relative">
       <button onclick="toggleModal('walletModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-      <h2 class="text-lg font-bold text-center text-amber-400 flex items-center justify-center gap-2"><i class="fa-solid fa-wallet"></i> Creator Earnings Wallet</h2>
+      <h2 class="text-lg font-bold text-center text-amber-400 flex items-center justify-center gap-2"><i class="fa-solid fa-wallet"></i> Wallet & Monetization</h2>
       
       <div class="bg-gray-900 p-4 rounded-xl text-center space-y-1 border border-amber-500/30">
         <p class="text-xs text-gray-400">Available Balance</p>
         <p id="modalUserBalance" class="text-2xl font-extrabold text-amber-400">PKR 0</p>
-        <p class="text-[10px] text-gray-500">Earned from video views & post interactions</p>
       </div>
 
       <div class="space-y-3 text-xs">
         <div>
-          <label class="text-gray-400">Select Payment Method</label>
+          <label class="text-gray-400">Select Withdrawal Method</label>
           <select id="withdrawMethod" class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded-lg mt-1">
             <option value="EasyPaisa">EasyPaisa</option>
             <option value="JazzCash">JazzCash</option>
@@ -177,8 +227,8 @@
           <input id="withdrawAccount" type="text" placeholder="03XXXXXXXXX" class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded-lg mt-1" />
         </div>
         <div>
-          <label class="text-gray-400">Withdraw Amount (PKR)</label>
-          <input id="withdrawAmount" type="number" placeholder="Min PKR 500" class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded-lg mt-1" />
+          <label class="text-gray-400">Withdraw Amount (Min PKR 500)</label>
+          <input id="withdrawAmount" type="number" placeholder="500" class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded-lg mt-1" />
         </div>
         <button onclick="requestWithdrawal()" class="w-full bg-amber-600 hover:bg-amber-700 py-2.5 rounded-lg text-sm font-bold text-black">Request Withdrawal</button>
       </div>
@@ -189,7 +239,7 @@
   <div id="authModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
     <div class="glassmorphism max-w-md w-full p-6 rounded-2xl space-y-4 relative">
       <button onclick="toggleModal('authModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-      <h2 class="text-xl font-bold text-center">Join PrimeX</h2>
+      <h2 class="text-xl font-bold text-center">Join PrimeX Pro</h2>
       <div class="space-y-3">
         <input id="authEmail" type="email" placeholder="Email Address" class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded-lg text-sm focus:outline-none" />
         <input id="authPassword" type="password" placeholder="Password" class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded-lg text-sm focus:outline-none" />
@@ -218,7 +268,7 @@
   <div id="depositModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
     <div class="glassmorphism max-w-lg w-full p-6 rounded-2xl space-y-4 relative">
       <button onclick="toggleModal('depositModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-      <h2 class="text-xl font-bold text-center text-emerald-400">Manual Funds Deposit</h2>
+      <h2 class="text-xl font-bold text-center text-emerald-400">Top-up Wallet (Manual Payment)</h2>
       <div class="grid grid-cols-2 gap-3 text-xs">
         <div class="bg-gray-900 p-3 rounded-lg border border-green-500/30">
           <p class="font-bold text-green-400 mb-1">EasyPaisa</p>
@@ -234,15 +284,14 @@
           <option value="EasyPaisa">EasyPaisa (03379827882)</option>
           <option value="JazzCash">JazzCash (03705519562)</option>
         </select>
-        <input id="depositAmount" type="number" placeholder="Amount (PKR)" class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded-lg" />
+        <input id="depositAmount" type="number" placeholder="Amount Sent (PKR)" class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded-lg" />
         <input id="depositTID" type="text" placeholder="Transaction ID (TID)" class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded-lg" />
-        <input id="depositProof" type="file" accept="image/*" class="w-full bg-gray-900 border border-gray-700 p-2 rounded-lg text-xs text-gray-400" />
-        <button onclick="submitDeposit()" class="w-full bg-emerald-600 py-2.5 rounded-lg font-bold">Submit Deposit</button>
+        <button onclick="submitDeposit()" class="w-full bg-emerald-600 py-2.5 rounded-lg font-bold">Submit Top-up Request</button>
       </div>
     </div>
   </div>
 
-  <!-- FIREBASE LOGIC & BASE64 STORAGE HANDLING -->
+  <!-- FIREBASE LOGIC & PAID FEATURES SCRIPT -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
@@ -261,7 +310,6 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
     const auth = getAuth(app);
     const db = getDatabase(app);
     const googleProvider = new GoogleAuthProvider();
@@ -277,6 +325,7 @@
         document.getElementById('userNavProfile').classList.remove('hidden');
         document.getElementById('navUserName').innerText = user.displayName || user.email.split('@')[0];
         loadUserWallet(user.uid);
+        checkVerificationStatus(user.uid);
       } else {
         document.getElementById('authNavButtons').classList.remove('hidden');
         document.getElementById('userNavProfile').classList.add('hidden');
@@ -292,7 +341,6 @@
     };
     window.logout = () => signOut(auth);
 
-    // Load Wallet Balance
     function loadUserWallet(uid) {
       onValue(ref(db, `wallets/${uid}`), (snapshot) => {
         const bal = snapshot.val()?.balance || 0;
@@ -301,7 +349,16 @@
       });
     }
 
-    // Direct Device Media Preview & Base64 Converter
+    function checkVerificationStatus(uid) {
+      onValue(ref(db, `verifiedUsers/${uid}`), (snapshot) => {
+        if (snapshot.exists() && snapshot.val() === true) {
+          document.getElementById('navVerifiedBadge').classList.remove('hidden');
+        } else {
+          document.getElementById('navVerifiedBadge').classList.add('hidden');
+        }
+      });
+    }
+
     window.previewMedia = (input, type) => {
       const file = input.files[0];
       if (!file) return;
@@ -331,20 +388,24 @@
       document.getElementById('videoInput').value = '';
     };
 
-    // Publish Post with Direct Media
     window.submitPost = async () => {
       if (!currentUser) return alert("Please login first, sweetie!");
       const content = document.getElementById('postInput').value;
       if (!content && !selectedMediaBase64) return alert("Add text or media!");
 
+      const isVerifiedSnap = await get(ref(db, `verifiedUsers/${currentUser.uid}`));
+      const isVerified = isVerifiedSnap.exists() && isVerifiedSnap.val() === true;
+
       const postRef = push(ref(db, 'posts'));
       await set(postRef, {
         author: currentUser.displayName || currentUser.email.split('@')[0],
         uid: currentUser.uid,
+        isVerified,
         content,
         media: selectedMediaBase64 || null,
         mediaType: selectedMediaType || null,
         likes: 0,
+        isBoosted: false,
         timestamp: Date.now()
       });
 
@@ -353,7 +414,6 @@
       alert("Post published live!");
     };
 
-    // Publish Reel with Direct Device Video
     window.submitReel = async () => {
       if (!currentUser) return alert("Please login first!");
       const title = document.getElementById('reelTitleInput').value;
@@ -369,7 +429,6 @@
           title,
           videoBase64: reader.result,
           likes: 0,
-          views: 0,
           timestamp: Date.now()
         });
         alert("Reel uploaded successfully!");
@@ -380,78 +439,140 @@
       reader.readAsDataURL(file);
     };
 
-    // Interaction & Earning Generator (Like gives earning to author)
-    window.likePost = async (key, postUid, currentLikes) => {
-      await update(ref(db, `posts/${key}`), { likes: currentLikes + 1 });
-      // Give earning reward to author (e.g. PKR 5 per like)
-      if (postUid) {
-        const walletRef = ref(db, `wallets/${postUid}/balance`);
-        const snap = await get(walletRef);
-        const currentBal = snap.exists() ? snap.val() : 0;
-        await set(walletRef, currentBal + 5);
-      }
+    // PAID FEATURE: Boost Post
+    window.openBoostModal = (postKey) => {
+      if (!currentUser) return alert("Please login first!");
+      document.getElementById('boostPostKey').value = postKey;
+      toggleModal('boostModal');
     };
 
-    // Withdraw Request System
-    window.requestWithdrawal = async () => {
-      if (!currentUser) return;
-      const method = document.getElementById('withdrawMethod').value;
-      const account = document.getElementById('withdrawAccount').value;
-      const amount = parseFloat(document.getElementById('withdrawAmount').value);
-
-      if (!account || !amount || amount < 500) return alert("Minimum withdrawal amount is PKR 500!");
-
+    window.confirmBoostPost = async () => {
+      const postKey = document.getElementById('boostPostKey').value;
+      const cost = parseFloat(document.getElementById('boostPackage').value);
+      
       const walletRef = ref(db, `wallets/${currentUser.uid}/balance`);
       const snap = await get(walletRef);
       const currentBal = snap.exists() ? snap.val() : 0;
 
-      if (currentBal < amount) return alert("Insufficient balance in your wallet!");
+      if (currentBal < cost) return alert("Insufficient balance! Please top up your wallet first.");
 
-      // Deduct temporarily & create request
-      await set(walletRef, currentBal - amount);
-      const reqRef = push(ref(db, 'withdrawals'));
-      await set(reqRef, {
-        id: reqRef.key,
+      await set(walletRef, currentBal - cost);
+      await update(ref(db, `posts/${postKey}`), { isBoosted: true });
+      toggleModal('boostModal');
+      alert("Success! Your post has been boosted and pinned on top.");
+    };
+
+    // PAID FEATURE: Verified Badge Purchase
+    window.purchaseVerification = async () => {
+      if (!currentUser) return alert("Please login first!");
+      const cost = 999;
+      const walletRef = ref(db, `wallets/${currentUser.uid}/balance`);
+      const snap = await get(walletRef);
+      const currentBal = snap.exists() ? snap.val() : 0;
+
+      if (currentBal < cost) return alert("Insufficient balance! Verification costs PKR 999.");
+
+      await set(walletRef, currentBal - cost);
+      await set(ref(db, `verifiedUsers/${currentUser.uid}`), true);
+      toggleModal('verifyModal');
+      alert("Congratulations! You are now a Verified Creator with a Blue Tick.");
+    };
+
+    // PAID FEATURE: Send Gift to Creator
+    window.openGiftModal = (authorUid) => {
+      if (!currentUser) return alert("Please login first!");
+      if (currentUser.uid === authorUid) return alert("You cannot send gifts to yourself!");
+      document.getElementById('giftTargetUid').value = authorUid;
+      toggleModal('giftModal');
+    };
+
+    window.confirmSendGift = async () => {
+      const targetUid = document.getElementById('giftTargetUid').value;
+      const giftCost = parseFloat(document.getElementById('giftAmount').value);
+
+      const senderWalletRef = ref(db, `wallets/${currentUser.uid}/balance`);
+      const senderSnap = await get(senderWalletRef);
+      const senderBal = senderSnap.exists() ? senderSnap.val() : 0;
+
+      if (senderBal < giftCost) return alert("Insufficient balance in your wallet!");
+
+      // Deduct from sender, add to receiver
+      await set(senderWalletRef, senderBal - giftCost);
+      const receiverWalletRef = ref(db, `wallets/${targetUid}/balance`);
+      const receiverSnap = await get(receiverWalletRef);
+      const receiverBal = receiverSnap.exists() ? receiverSnap.val() : 0;
+      await set(receiverWalletRef, receiverBal + giftCost);
+
+      toggleModal('giftModal');
+      alert("Gift sent successfully to the creator!");
+    };
+
+    // Manual Deposit
+    window.submitDeposit = async () => {
+      if (!currentUser) return;
+      const method = document.getElementById('depositMethod').value;
+      const amount = parseFloat(document.getElementById('depositAmount').value);
+      const tid = document.getElementById('depositTID').value;
+      if (!amount || !tid) return alert("Please fill all details!");
+
+      const refReq = push(ref(db, 'deposits'));
+      await set(refReq, {
+        id: refReq.key,
         uid: currentUser.uid,
-        userEmail: currentUser.email,
+        email: currentUser.email,
         method,
-        account,
         amount,
+        tid,
         status: 'pending',
         timestamp: Date.now()
       });
-
-      alert("Withdrawal request submitted successfully!");
-      toggleModal('walletModal');
+      toggleModal('depositModal');
+      alert("Top-up request submitted! Admin will verify and credit your wallet within 15 minutes.");
     };
 
-    // Feed Realtime Render
+    // Feed Render with Boost & Verified Badges
     onValue(ref(db, 'posts'), (snapshot) => {
       const feed = document.getElementById('postsFeed'); feed.innerHTML = '';
       const data = snapshot.val(); if (!data) return;
-      Object.entries(data).reverse().forEach(([key, post]) => {
+      
+      const postsArray = Object.entries(data);
+      // Sort to show Boosted posts on top
+      postsArray.sort((a, b) => (b[1].isBoosted ? 1 : 0) - (a[1].isBoosted ? 1 : 0));
+
+      postsArray.forEach(([key, post]) => {
         const el = document.createElement('div');
-        el.className = 'glassmorphism p-4 rounded-xl space-y-3';
+        el.className = `glassmorphism p-4 rounded-xl space-y-3 ${post.isBoosted ? 'border border-amber-500/50 bg-amber-950/10' : ''}`;
         el.innerHTML = `
-          <div class="flex items-center space-x-2">
-            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center font-bold text-xs">${post.author.charAt(0).toUpperCase()}</div>
-            <div><p class="text-sm font-bold">${post.author}</p><p class="text-[10px] text-gray-500">${new Date(post.timestamp).toLocaleTimeString()}</p></div>
+          ${post.isBoosted ? '<span class="text-[10px] bg-amber-500 text-black font-bold px-2 py-0.5 rounded uppercase"><i class="fa-solid fa-bullhorn"></i> Sponsored Ad / Boosted</span>' : ''}
+          <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+              <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center font-bold text-xs">${post.author.charAt(0).toUpperCase()}</div>
+              <div>
+                <p class="text-sm font-bold flex items-center gap-1">
+                  ${post.author} 
+                  ${post.isVerified ? '<span class="text-blue-400 text-xs"><i class="fa-solid fa-circle-check"></i></span>' : ''}
+                </p>
+                <p class="text-[10px] text-gray-500">${new Date(post.timestamp).toLocaleTimeString()}</p>
+              </div>
+            </div>
+            ${currentUser && currentUser.uid === post.uid && !post.isBoosted ? `<button onclick="openBoostModal('${key}')" class="text-[10px] bg-amber-600 hover:bg-amber-700 text-black font-bold px-2.5 py-1 rounded-lg">Boost Post</button>` : ''}
           </div>
           <p class="text-sm text-gray-300">${post.content}</p>
           ${post.media && post.mediaType === 'image' ? `<img src="${post.media}" class="w-full h-64 object-cover rounded-lg" />` : ''}
           ${post.media && post.mediaType === 'video' ? `<video src="${post.media}" controls class="w-full h-64 object-cover rounded-lg"></video>` : ''}
-          <div class="flex items-center space-x-6 text-xs text-gray-400 pt-2 border-t border-gray-800">
-            <button onclick="likePost('${key}', '${post.uid}', ${post.likes || 0})" class="hover:text-red-500 flex items-center gap-1"><i class="fa-regular fa-heart text-sm"></i> <span>${post.likes || 0} Likes</span></button>
+          <div class="flex justify-between items-center text-xs text-gray-400 pt-2 border-t border-gray-800">
+            <span>${post.likes || 0} Likes</span>
+            ${currentUser && currentUser.uid !== post.uid ? `<button onclick="openGiftModal('${post.uid}')" class="text-pink-400 font-bold hover:underline flex items-center gap-1"><i class="fa-solid fa-gift"></i> Send Gift</button>` : ''}
           </div>
         `;
         feed.appendChild(el);
       });
     });
 
-    // Reels Realtime Render
+    // Reels Render
     onValue(ref(db, 'reels'), (snapshot) => {
       const container = document.getElementById('reelsContainer'); container.innerHTML = '';
-      const data = snapshot.val(); if (!data) { container.innerHTML = `<p class="text-xs text-center text-gray-500 py-20">No reels uploaded yet. Be the first!</p>`; return; }
+      const data = snapshot.val(); if (!data) { container.innerHTML = `<p class="text-xs text-center text-gray-500 py-20">No reels uploaded yet.</p>`; return; }
       Object.values(data).reverse().forEach(reel => {
         const div = document.createElement('div');
         div.className = "reel-card relative h-full bg-black rounded-xl overflow-hidden flex items-center justify-center border border-gray-800";
@@ -460,9 +581,6 @@
           <div class="absolute bottom-4 left-4 space-y-1">
             <p class="font-bold text-sm text-white">${reel.author}</p>
             <p class="text-xs text-gray-300">${reel.title}</p>
-          </div>
-          <div class="absolute right-4 bottom-12 flex flex-col items-center space-y-4 text-white">
-            <button class="hover:text-red-500"><i class="fa-solid fa-heart text-2xl"></i></button>
           </div>
         `;
         container.appendChild(div);
@@ -487,18 +605,48 @@
     window.lockAdminPanel = () => document.getElementById('eagleEyePanel').classList.add('hidden');
 
     function loadAdminData() {
+      // Load Deposits
+      onValue(ref(db, 'deposits'), (snapshot) => {
+        const container = document.getElementById('depositRequestsContainer'); container.innerHTML = '';
+        const data = snapshot.val(); if (!data) return;
+        Object.values(data).reverse().forEach(item => {
+          const div = document.createElement('div');
+          div.className = "p-3 bg-gray-900 rounded-lg border border-gray-800 flex justify-between items-center text-xs";
+          div.innerHTML = `<div><p class="font-bold">${item.email}</p><p class="text-green-400">${item.method}: PKR ${item.amount} (TID: ${item.tid})</p></div>`;
+          container.appendChild(div);
+        });
+      });
+      // Load Withdrawals
       onValue(ref(db, 'withdrawals'), (snapshot) => {
-        const container = document.getElementById('withdrawRequestsContainer');
-        container.innerHTML = '';
+        const container = document.getElementById('withdrawRequestsContainer'); container.innerHTML = '';
         const data = snapshot.val(); if (!data) return;
         Object.values(data).reverse().forEach(item => {
           const div = document.createElement('div');
           div.className = "p-3 bg-gray-900 rounded-lg border border-gray-800 space-y-1 text-xs";
-          div.innerHTML = `<p class="font-bold">${item.userEmail}</p><p class="text-amber-400">${item.method}: PKR ${item.amount} (${item.account})</p><span class="text-yellow-400 font-bold uppercase text-[10px]">${item.status}</span>`;
+          div.innerHTML = `<p class="font-bold">${item.userEmail}</p><p class="text-amber-400">${item.method}: PKR ${item.amount} (${item.account})</p>`;
           container.appendChild(div);
         });
       });
     }
+
+    window.requestWithdrawal = async () => {
+      if (!currentUser) return;
+      const method = document.getElementById('withdrawMethod').value;
+      const account = document.getElementById('withdrawAccount').value;
+      const amount = parseFloat(document.getElementById('withdrawAmount').value);
+      if (!account || !amount || amount < 500) return alert("Minimum withdrawal is PKR 500!");
+
+      const walletRef = ref(db, `wallets/${currentUser.uid}/balance`);
+      const snap = await get(walletRef);
+      const currentBal = snap.exists() ? snap.val() : 0;
+      if (currentBal < amount) return alert("Insufficient balance!");
+
+      await set(walletRef, currentBal - amount);
+      const reqRef = push(ref(db, 'withdrawals'));
+      await set(reqRef, { uid: currentUser.uid, userEmail: currentUser.email, method, account, amount, status: 'pending', timestamp: Date.now() });
+      alert("Withdrawal requested successfully!");
+      toggleModal('walletModal');
+    };
   </script>
 
   <script>
@@ -506,6 +654,8 @@
     function openDepositModal() { toggleModal('depositModal'); }
     function openWalletModal() { toggleModal('walletModal'); }
     function openUploadReelModal() { toggleModal('uploadReelModal'); }
+    function openVerifyModal() { toggleModal('verifyModal'); }
+    function openBoostInfo() { alert("Boost Feature: Pay a small fee to pin your post on top of everyone's feed for maximum views!"); }
     function switchTab(tab) {
       if (tab === 'feed') { document.getElementById('feedTab').classList.remove('hidden'); document.getElementById('reelsTab').classList.add('hidden'); }
       else { document.getElementById('feedTab').classList.add('hidden'); document.getElementById('reelsTab').classList.remove('hidden'); }
