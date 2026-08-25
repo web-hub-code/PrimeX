@@ -294,9 +294,8 @@
   <!-- FIREBASE LOGIC & PAID FEATURES SCRIPT -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getDatabase, ref, push, set, onValue, update, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, push, set, onValue, update, get, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCLFzI1dWn36_b3E9pzb_GU1Q3EyoRdnn0",
@@ -536,7 +535,6 @@
       const data = snapshot.val(); if (!data) return;
       
       const postsArray = Object.entries(data);
-      // Sort to show Boosted posts on top
       postsArray.sort((a, b) => (b[1].isBoosted ? 1 : 0) - (a[1].isBoosted ? 1 : 0));
 
       postsArray.forEach(([key, post]) => {
@@ -609,25 +607,75 @@
       onValue(ref(db, 'deposits'), (snapshot) => {
         const container = document.getElementById('depositRequestsContainer'); container.innerHTML = '';
         const data = snapshot.val(); if (!data) return;
-        Object.values(data).reverse().forEach(item => {
-          const div = document.createElement('div');
-          div.className = "p-3 bg-gray-900 rounded-lg border border-gray-800 flex justify-between items-center text-xs";
-          div.innerHTML = `<div><p class="font-bold">${item.email}</p><p class="text-green-400">${item.method}: PKR ${item.amount} (TID: ${item.tid})</p></div>`;
-          container.appendChild(div);
+        Object.entries(data).reverse().forEach(([key, item]) => {
+          if (item.status === 'pending') {
+            const div = document.createElement('div');
+            div.className = "p-3 bg-gray-900 rounded-lg border border-gray-800 flex justify-between items-center text-xs";
+            div.innerHTML = `
+              <div>
+                <p class="font-bold">${item.email}</p>
+                <p class="text-green-400">${item.method}: PKR ${item.amount} (TID: ${item.tid})</p>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="approveDeposit('${key}', '${item.uid}', ${item.amount})" class="bg-green-600 px-2 py-1 rounded text-white font-bold">Approve</button>
+                <button onclick="rejectDeposit('${key}')" class="bg-red-600 px-2 py-1 rounded text-white">Reject</button>
+              </div>
+            `;
+            container.appendChild(div);
+          }
         });
       });
       // Load Withdrawals
       onValue(ref(db, 'withdrawals'), (snapshot) => {
         const container = document.getElementById('withdrawRequestsContainer'); container.innerHTML = '';
         const data = snapshot.val(); if (!data) return;
-        Object.values(data).reverse().forEach(item => {
-          const div = document.createElement('div');
-          div.className = "p-3 bg-gray-900 rounded-lg border border-gray-800 space-y-1 text-xs";
-          div.innerHTML = `<p class="font-bold">${item.userEmail}</p><p class="text-amber-400">${item.method}: PKR ${item.amount} (${item.account})</p>`;
-          container.appendChild(div);
+        Object.entries(data).reverse().forEach(([key, item]) => {
+          if (item.status === 'pending') {
+            const div = document.createElement('div');
+            div.className = "p-3 bg-gray-900 rounded-lg border border-gray-800 flex justify-between items-center text-xs";
+            div.innerHTML = `
+              <div>
+                <p class="font-bold">${item.userEmail}</p>
+                <p class="text-amber-400">${item.method}: PKR ${item.amount} (${item.account})</p>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="approveWithdrawal('${key}')" class="bg-green-600 px-2 py-1 rounded text-white font-bold">Mark Paid</button>
+                <button onclick="rejectWithdrawal('${key}', '${item.uid}', ${item.amount})" class="bg-red-600 px-2 py-1 rounded text-white">Refund & Reject</button>
+              </div>
+            `;
+            container.appendChild(div);
+          }
         });
       });
     }
+
+    window.approveDeposit = async (depKey, targetUid, amount) => {
+      const walletRef = ref(db, `wallets/${targetUid}/balance`);
+      const snap = await get(walletRef);
+      const currentBal = snap.exists() ? snap.val() : 0;
+      await set(walletRef, currentBal + amount);
+      await update(ref(db, `deposits/${depKey}`), { status: 'approved' });
+      alert("Top-up approved and credited!");
+    };
+
+    window.rejectDeposit = async (depKey) => {
+      await update(ref(db, `deposits/${depKey}`), { status: 'rejected' });
+      alert("Deposit request rejected.");
+    };
+
+    window.approveWithdrawal = async (witKey) => {
+      await update(ref(db, `withdrawals/${witKey}`), { status: 'paid' });
+      alert("Withdrawal marked as paid!");
+    };
+
+    window.rejectWithdrawal = async (witKey, targetUid, amount) => {
+      const walletRef = ref(db, `wallets/${targetUid}/balance`);
+      const snap = await get(walletRef);
+      const currentBal = snap.exists() ? snap.val() : 0;
+      await set(walletRef, currentBal + amount);
+      await update(ref(db, `withdrawals/${witKey}`), { status: 'rejected' });
+      alert("Withdrawal rejected and funds refunded to user wallet.");
+    };
 
     window.requestWithdrawal = async () => {
       if (!currentUser) return;
