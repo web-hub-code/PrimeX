@@ -10,7 +10,7 @@
   <style>
     body { background-color: #0b0f19; color: #f3f4f6; font-family: 'Inter', sans-serif; }
     .glassmorphism { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
-    .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+    .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
     .reel-snap { scroll-snap-type: y mandatory; }
     .reel-card { scroll-snap-align: start; }
@@ -21,20 +21,22 @@
   <!-- TOP NAVIGATION BAR -->
   <nav class="sticky top-0 z-50 glassmorphism border-b border-gray-800 px-4 py-3 flex justify-between items-center">
     <div class="flex items-center space-x-3">
-      <!-- SECRET ADMIN TRIGGER: 5 Taps on Logo -->
       <h1 id="secretLogoBtn" onclick="handleLogoTap()" class="cursor-pointer text-2xl font-extrabold tracking-wider bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 bg-clip-text text-transparent select-none">
-        PrimeX <span class="text-[10px] bg-amber-500 text-black px-1.5 py-0.5 rounded font-bold uppercase">Pro Ads</span>
+        PrimeX <span class="text-[10px] bg-amber-500 text-black px-1.5 py-0.5 rounded font-bold uppercase">Pro Ultimate</span>
       </h1>
     </div>
     <div id="authNavButtons" class="flex items-center space-x-3">
       <button onclick="toggleModal('authModal')" class="bg-blue-600 hover:bg-blue-700 text-sm font-semibold px-4 py-2 rounded-lg transition">Login / Register</button>
     </div>
     <div id="userNavProfile" class="hidden flex items-center space-x-3">
+      <button onclick="openAnalyticsModal()" class="bg-indigo-600/80 hover:bg-indigo-600 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1">
+        <i class="fa-solid fa-chart-line"></i> Analytics
+      </button>
       <button onclick="openWalletModal()" class="bg-gradient-to-r from-amber-500 to-yellow-600 text-xs font-bold px-3 py-1.5 rounded-lg hover:opacity-90 flex items-center gap-1 text-black">
         <i class="fa-solid fa-coins"></i> <span id="navWalletBalance">PKR 0</span>
       </button>
       <button onclick="openDepositModal()" class="bg-gradient-to-r from-green-500 to-emerald-600 text-xs font-bold px-3 py-1.5 rounded-lg hover:opacity-90 flex items-center gap-1">
-        <i class="fa-solid fa-wallet"></i> Top-up / Add Funds
+        <i class="fa-solid fa-wallet"></i> Top-up
       </button>
       <div class="flex items-center gap-1">
         <span id="navUserName" class="text-sm font-medium text-gray-300"></span>
@@ -54,23 +56,43 @@
           <i class="fa-solid fa-house text-blue-500 text-lg"></i> <span class="font-medium">Home Feed</span>
         </button>
         <button onclick="switchTab('reels')" class="w-full flex items-center space-x-3 text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-800/50 transition">
-          <i class="fa-solid fa-clapperboard text-red-500 text-lg"></i> <span class="font-medium">Prime Reels</span>
+          <i class="fa-solid fa-clapperboard text-red-500 text-lg"></i> <span class="font-medium">TikTok Reels</span>
+        </button>
+        <button onclick="switchTab('groups')" class="w-full flex items-center space-x-3 text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-800/50 transition">
+          <i class="fa-solid fa-users text-green-400 text-lg"></i> <span class="font-medium">Facebook Communities</span>
+        </button>
+        <button onclick="openAnalyticsModal()" class="w-full flex items-center space-x-3 text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-800/50 transition">
+          <i class="fa-solid fa-chart-pie text-purple-400 text-lg"></i> <span class="font-medium">Creator Dashboard</span>
         </button>
         <button onclick="openVerifyModal()" class="w-full flex items-center space-x-3 text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-800/50 transition">
           <i class="fa-solid fa-certificate text-blue-400 text-lg"></i> <span class="font-medium">Get Verified Badge</span>
         </button>
         <button onclick="openWalletModal()" class="w-full flex items-center space-x-3 text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-800/50 transition">
-          <i class="fa-solid fa-wallet text-amber-500 text-lg"></i> <span class="font-medium">Wallet & Monetization</span>
+          <i class="fa-solid fa-wallet text-amber-500 text-lg"></i> <span class="font-medium">Wallet & Earnings</span>
         </button>
       </div>
     </aside>
 
     <!-- CENTER CONTENT AREA -->
     <main class="col-span-1 md:col-span-2 space-y-6">
-      
+
+      <!-- INSTAGRAM STORIES BAR -->
+      <div class="glassmorphism p-3 rounded-xl">
+        <h3 class="text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Instagram Stories</h3>
+        <div id="storiesBar" class="flex items-center space-x-3 overflow-x-auto custom-scrollbar pb-1">
+          <!-- Add Story Trigger -->
+          <div onclick="openAddStoryModal()" class="flex-shrink-0 flex flex-col items-center cursor-pointer group">
+            <div class="w-14 h-14 rounded-full border-2 border-dashed border-blue-500 flex items-center justify-center bg-gray-900 group-hover:bg-gray-800 transition">
+              <i class="fa-solid fa-plus text-blue-400"></i>
+            </div>
+            <span class="text-[10px] mt-1 text-gray-400 group-hover:text-white">Add Story</span>
+          </div>
+          <div id="storiesContainer" class="flex space-x-3"></div>
+        </div>
+      </div>
+
       <!-- TAB 1: HOME FEED -->
       <div id="feedTab" class="space-y-6">
-        
         <!-- CREATE POST BOX -->
         <div class="glassmorphism p-4 rounded-xl space-y-3">
           <textarea id="postInput" rows="2" placeholder="What's happening on PrimeX, sweetie?" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-sm focus:outline-none focus:border-blue-500 resize-none"></textarea>
@@ -100,11 +122,11 @@
           </div>
           <div class="space-y-4">
             <div>
-              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pending Fund Deposits (Top-ups)</h3>
+              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pending Fund Deposits</h3>
               <div id="depositRequestsContainer" class="space-y-3 custom-scrollbar max-h-48 overflow-y-auto"></div>
             </div>
             <div class="border-t border-gray-800 pt-4">
-              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pending Creator Withdrawals</h3>
+              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pending Withdrawals</h3>
               <div id="withdrawRequestsContainer" class="space-y-3 custom-scrollbar max-h-48 overflow-y-auto"></div>
             </div>
           </div>
@@ -114,11 +136,11 @@
         <section id="postsFeed" class="space-y-4"></section>
       </div>
 
-      <!-- TAB 2: REELS FEED -->
+      <!-- TAB 2: TIKTOK REELS FEED & DUET SYSTEM -->
       <div id="reelsTab" class="hidden space-y-4">
         <div class="flex justify-between items-center">
           <h2 class="text-lg font-bold text-red-400 flex items-center gap-2">
-            <i class="fa-solid fa-fire"></i> Prime Reels Feed
+            <i class="fa-solid fa-fire"></i> Prime Reels & TikTok Duets
           </h2>
           <button onclick="openUploadReelModal()" class="bg-red-600 hover:bg-red-700 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1">
             <i class="fa-solid fa-plus"></i> Upload Reel
@@ -126,23 +148,111 @@
         </div>
         <div id="reelsContainer" class="h-[600px] overflow-y-scroll reel-snap rounded-2xl glassmorphism space-y-4 custom-scrollbar p-2"></div>
       </div>
+
+      <!-- TAB 3: FACEBOOK COMMUNITIES / GROUPS -->
+      <div id="groupsTab" class="hidden space-y-4">
+        <h2 class="text-lg font-bold text-green-400 flex items-center gap-2">
+          <i class="fa-solid fa-users"></i> Facebook Style Communities
+        </h2>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="glassmorphism p-4 rounded-xl border border-green-500/20 text-center space-y-2">
+            <i class="fa-solid fa-code text-2xl text-green-400"></i>
+            <h3 class="font-bold text-sm">Tech & Web Developers GB</h3>
+            <p class="text-[11px] text-gray-400">Discuss web apps, APIs & modern tech.</p>
+            <button onclick="joinCommunity('Tech GB')" class="bg-green-600 text-xs font-bold px-3 py-1 rounded-lg">Joined</button>
+          </div>
+          <div class="glassmorphism p-4 rounded-xl border border-blue-500/20 text-center space-y-2">
+            <i class="fa-solid fa-mountain text-2xl text-blue-400"></i>
+            <h3 class="font-bold text-sm">Discover Gilgit-Baltistan</h3>
+            <p class="text-[11px] text-gray-400">Share news, photos & tourism updates.</p>
+            <button onclick="joinCommunity('GB Tourism')" class="bg-blue-600 text-xs font-bold px-3 py-1 rounded-lg">Joined</button>
+          </div>
+        </div>
+      </div>
+
     </main>
 
-    <!-- RIGHT SIDEBAR: PAID MONETIZATION PROMOTIONS -->
+    <!-- RIGHT SIDEBAR: PROMOTIONS & DASHBOARD LINK -->
     <aside class="hidden md:block col-span-1 space-y-4">
+      <div class="glassmorphism p-4 rounded-xl space-y-3 border border-indigo-500/30">
+        <h3 class="font-bold text-sm text-indigo-400 flex items-center gap-1"><i class="fa-solid fa-chart-line"></i> Creator Analytics</h3>
+        <p class="text-xs text-gray-300 leading-relaxed">
+          Monitor your real-time video performance, views growth, and wallet balance analytics.
+        </p>
+        <button onclick="openAnalyticsModal()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg text-xs">Open Dashboard</button>
+      </div>
+
       <div class="glassmorphism p-4 rounded-xl space-y-3 border border-amber-500/30">
         <h3 class="font-bold text-sm text-amber-400 flex items-center gap-1"><i class="fa-solid fa-bullhorn"></i> Paid Ad Booster</h3>
         <p class="text-xs text-gray-300 leading-relaxed">
-          Want maximum reach? Boost your posts or reels to appear on top of all users' feeds with paid monetization plans (Starting @ PKR 300).
+          Boost your posts or reels to appear on top of all feeds (Starting @ PKR 300).
         </p>
         <button onclick="openBoostInfo()" class="w-full bg-gradient-to-r from-amber-500 to-yellow-600 text-black font-bold py-2 rounded-lg text-xs">Learn More & Boost</button>
       </div>
-      <div class="glassmorphism p-4 rounded-xl space-y-2">
-        <h3 class="font-bold text-xs text-blue-400 flex items-center gap-1"><i class="fa-solid fa-shield-check"></i> Verified Creator Program</h3>
-        <p class="text-[11px] text-gray-400">Get the official blue checkmark badge on your profile and increase user trust.</p>
-        <button onclick="openVerifyModal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 rounded-lg text-xs">Apply Now (Paid)</button>
-      </div>
     </aside>
+  </div>
+
+  <!-- MODAL: ADD INSTAGRAM STORY -->
+  <div id="addStoryModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
+    <div class="glassmorphism max-w-sm w-full p-6 rounded-2xl space-y-4 relative">
+      <button onclick="toggleModal('addStoryModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      <h2 class="text-lg font-bold text-center text-blue-400">Post 24-Hour Story</h2>
+      <input id="storyFileInput" type="file" accept="image/*,video/*" class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded-lg text-xs" />
+      <button onclick="submitStory()" class="w-full bg-blue-600 hover:bg-blue-700 py-2.5 rounded-lg text-xs font-bold">Upload Story</button>
+    </div>
+  </div>
+
+  <!-- MODAL: VIEW STORY VIEWPORT -->
+  <div id="viewStoryModal" class="fixed inset-0 bg-black/90 hidden items-center justify-center p-4 z-50">
+    <div class="max-w-xs w-full glassmorphism rounded-2xl p-4 text-center relative">
+      <button onclick="toggleModal('viewStoryModal')" class="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+      <p id="storyAuthor" class="font-bold text-xs text-blue-400 mb-2"></p>
+      <img id="storyImageDisplay" class="w-full h-80 object-cover rounded-xl hidden" />
+      <video id="storyVideoDisplay" class="w-full h-80 object-cover rounded-xl hidden" controls autoplay></video>
+    </div>
+  </div>
+
+  <!-- MODAL: ANALYTICS DASHBOARD -->
+  <div id="analyticsModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
+    <div class="glassmorphism max-w-md w-full p-6 rounded-2xl space-y-4 relative">
+      <button onclick="toggleModal('analyticsModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      <h2 class="text-lg font-bold text-center text-indigo-400 flex items-center justify-center gap-2">
+        <i class="fa-solid fa-chart-pie"></i> Creator Performance Analytics
+      </h2>
+      <div class="grid grid-cols-2 gap-3 text-center">
+        <div class="bg-gray-900/80 p-3 rounded-xl border border-indigo-500/20">
+          <p class="text-[10px] text-gray-400 uppercase">Total Post Views</p>
+          <p id="statTotalViews" class="text-xl font-extrabold text-blue-400">0</p>
+        </div>
+        <div class="bg-gray-900/80 p-3 rounded-xl border border-indigo-500/20">
+          <p class="text-[10px] text-gray-400 uppercase">Engagement Rate</p>
+          <p id="statEngagement" class="text-xl font-extrabold text-green-400">94.2%</p>
+        </div>
+        <div class="bg-gray-900/80 p-3 rounded-xl border border-indigo-500/20">
+          <p class="text-[10px] text-gray-400 uppercase">Est. Monetization</p>
+          <p id="statMonetization" class="text-xl font-extrabold text-amber-400">PKR 0</p>
+        </div>
+        <div class="bg-gray-900/80 p-3 rounded-xl border border-indigo-500/20">
+          <p class="text-[10px] text-gray-400 uppercase">Top Reach Region</p>
+          <p class="text-sm font-bold text-purple-400">Gilgit-Baltistan</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: TIKTOK DUET REACTION -->
+  <div id="duetModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
+    <div class="glassmorphism max-w-md w-full p-6 rounded-2xl space-y-4 relative">
+      <button onclick="toggleModal('duetModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      <h2 class="text-lg font-bold text-center text-red-400">Create TikTok Duet Video</h2>
+      <input id="duetOriginalUrl" type="hidden" />
+      <div class="grid grid-cols-2 gap-2 h-40 bg-black rounded-lg overflow-hidden border border-gray-700">
+        <video id="duetOriginalPreview" class="w-full h-full object-cover" muted></video>
+        <div class="flex items-center justify-center bg-gray-900 text-xs text-gray-500">Your Video Split Screen</div>
+      </div>
+      <input id="duetVideoInput" type="file" accept="video/*" class="w-full bg-gray-900 border border-gray-700 p-2 rounded-lg text-xs" />
+      <button onclick="submitDuetReel()" class="w-full bg-red-600 hover:bg-red-700 py-2.5 rounded-lg text-xs font-bold">Publish Duet Reel</button>
+    </div>
   </div>
 
   <!-- BOOST POST MODAL -->
@@ -150,7 +260,7 @@
     <div class="glassmorphism max-w-sm w-full p-6 rounded-2xl space-y-4 relative">
       <button onclick="toggleModal('boostModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
       <h2 class="text-lg font-bold text-center text-amber-400">Boost Post (Paid Ad)</h2>
-      <p class="text-xs text-gray-300 text-center">Select your budget to pin this post on top of user feeds for 24 hours.</p>
+      <p class="text-xs text-gray-300 text-center">Pin this post on top of user feeds for 24 hours.</p>
       <input id="boostPostKey" type="hidden" />
       <select id="boostPackage" class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded-lg text-xs">
         <option value="300">Basic Boost - PKR 300 (1,000 Impressions)</option>
@@ -167,25 +277,8 @@
       <button onclick="toggleModal('verifyModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
       <i class="fa-solid fa-certificate text-4xl text-blue-400"></i>
       <h2 class="text-lg font-bold">Get Verified Blue Tick</h2>
-      <p class="text-xs text-gray-300">Unlock official credibility on PrimeX for a one-time verification fee of <strong>PKR 999</strong>.</p>
+      <p class="text-xs text-gray-300">Unlock official credibility for a fee of <strong>PKR 999</strong>.</p>
       <button onclick="purchaseVerification()" class="w-full bg-blue-600 hover:bg-blue-700 py-2.5 rounded-lg text-xs font-bold">Pay & Get Verified</button>
-    </div>
-  </div>
-
-  <!-- SEND GIFT / SUPER THANKS MODAL -->
-  <div id="giftModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
-    <div class="glassmorphism max-w-sm w-full p-6 rounded-2xl space-y-4 text-center relative">
-      <button onclick="toggleModal('giftModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-      <i class="fa-solid fa-gift text-4xl text-pink-400"></i>
-      <h2 class="text-lg font-bold">Send Creator Gift</h2>
-      <p class="text-xs text-gray-300">Support this creator directly from your wallet balance.</p>
-      <input id="giftTargetUid" type="hidden" />
-      <select id="giftAmount" class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded-lg text-xs">
-        <option value="50">Rose (PKR 50)</option>
-        <option value="200">Coffee (PKR 200)</option>
-        <option value="500">Super Car (PKR 500)</option>
-      </select>
-      <button onclick="confirmSendGift()" class="w-full bg-pink-600 hover:bg-pink-700 py-2.5 rounded-lg text-xs font-bold">Send Gift Now</button>
     </div>
   </div>
 
@@ -208,12 +301,10 @@
     <div class="glassmorphism max-w-md w-full p-6 rounded-2xl space-y-4 relative">
       <button onclick="toggleModal('walletModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
       <h2 class="text-lg font-bold text-center text-amber-400 flex items-center justify-center gap-2"><i class="fa-solid fa-wallet"></i> Wallet & Monetization</h2>
-      
       <div class="bg-gray-900 p-4 rounded-xl text-center space-y-1 border border-amber-500/30">
         <p class="text-xs text-gray-400">Available Balance</p>
         <p id="modalUserBalance" class="text-2xl font-extrabold text-amber-400">PKR 0</p>
       </div>
-
       <div class="space-y-3 text-xs">
         <div>
           <label class="text-gray-400">Select Withdrawal Method</label>
@@ -291,7 +382,7 @@
     </div>
   </div>
 
-  <!-- FIREBASE LOGIC & PAID FEATURES SCRIPT -->
+  <!-- FIREBASE & EXTENDED Dynamic LOGIC SCRIPT -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -345,6 +436,7 @@
         const bal = snapshot.val()?.balance || 0;
         document.getElementById('navWalletBalance').innerText = `PKR ${bal}`;
         document.getElementById('modalUserBalance').innerText = `PKR ${bal}`;
+        document.getElementById('statMonetization').innerText = `PKR ${bal}`;
       });
     }
 
@@ -358,6 +450,138 @@
       });
     }
 
+    // INSTAGRAM STORIES REALTIME LOGIC
+    onValue(ref(db, 'stories'), (snapshot) => {
+      const container = document.getElementById('storiesContainer');
+      container.innerHTML = '';
+      const data = snapshot.val();
+      if (!data) return;
+
+      const now = Date.now();
+      Object.values(data).forEach(story => {
+        // Expire after 24 Hours
+        if (now - story.timestamp < 24 * 60 * 60 * 1000) {
+          const div = document.createElement('div');
+          div.className = "flex-shrink-0 flex flex-col items-center cursor-pointer";
+          div.onclick = () => viewStory(story);
+          div.innerHTML = `
+            <div class="w-14 h-14 rounded-full p-[2px] bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500">
+              <div class="w-full h-full rounded-full bg-gray-900 border-2 border-black flex items-center justify-center font-bold text-xs text-white uppercase overflow-hidden">
+                ${story.author.charAt(0)}
+              </div>
+            </div>
+            <span class="text-[10px] mt-1 text-gray-300">${story.author.substring(0, 8)}</span>
+          `;
+          container.appendChild(div);
+        }
+      });
+    });
+
+    window.openAddStoryModal = () => {
+      if (!currentUser) return alert("Please login first, sweetie!");
+      toggleModal('addStoryModal');
+    };
+
+    window.submitStory = async () => {
+      const file = document.getElementById('storyFileInput').files[0];
+      if (!file) return alert("Select media first!");
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const type = file.type.startsWith('image') ? 'image' : 'video';
+        const storyRef = push(ref(db, 'stories'));
+        await set(storyRef, {
+          author: currentUser.displayName || currentUser.email.split('@')[0],
+          uid: currentUser.uid,
+          media: reader.result,
+          mediaType: type,
+          timestamp: Date.now()
+        });
+        toggleModal('addStoryModal');
+        alert("24-Hour Story published!");
+      };
+      reader.readAsDataURL(file);
+    };
+
+    function viewStory(story) {
+      document.getElementById('storyAuthor').innerText = story.author + "'s Story";
+      if (story.mediaType === 'image') {
+        document.getElementById('storyImageDisplay').src = story.media;
+        document.getElementById('storyImageDisplay').classList.remove('hidden');
+        document.getElementById('storyVideoDisplay').classList.add('hidden');
+      } else {
+        document.getElementById('storyVideoDisplay').src = story.media;
+        document.getElementById('storyVideoDisplay').classList.remove('hidden');
+        document.getElementById('storyImageDisplay').classList.add('hidden');
+      }
+      toggleModal('viewStoryModal');
+    }
+
+    // TIKTOK DUET SYSTEM ENGINE
+    window.openDuetModal = (videoUrl) => {
+      if (!currentUser) return alert("Please login first!");
+      document.getElementById('duetOriginalUrl').value = videoUrl;
+      document.getElementById('duetOriginalPreview').src = videoUrl;
+      toggleModal('duetModal');
+    };
+
+    window.submitDuetReel = async () => {
+      const originalUrl = document.getElementById('duetOriginalUrl').value;
+      const file = document.getElementById('duetVideoInput').files[0];
+      if (!file) return alert("Select your reaction video!");
+
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const reelRef = push(ref(db, 'reels'));
+        await set(reelRef, {
+          author: currentUser.displayName || currentUser.email.split('@')[0],
+          uid: currentUser.uid,
+          title: "Duet with Creator",
+          videoBase64: originalUrl,
+          duetVideoBase64: reader.result,
+          isDuet: true,
+          likes: 0,
+          timestamp: Date.now()
+        });
+        toggleModal('duetModal');
+        alert("Duet Reel published!");
+      };
+      reader.readAsDataURL(file);
+    };
+
+    // REELS RENDER WITH DUET SPLIT SCREEN
+    onValue(ref(db, 'reels'), (snapshot) => {
+      const container = document.getElementById('reelsContainer'); container.innerHTML = '';
+      const data = snapshot.val(); if (!data) { container.innerHTML = `<p class="text-xs text-center text-gray-500 py-20">No reels uploaded yet.</p>`; return; }
+      Object.values(data).reverse().forEach(reel => {
+        const div = document.createElement('div');
+        div.className = "reel-card relative h-full bg-black rounded-xl overflow-hidden flex items-center justify-center border border-gray-800";
+        if (reel.isDuet) {
+          div.innerHTML = `
+            <div class="grid grid-cols-2 w-full h-full">
+              <video src="${reel.videoBase64}" autoplay loop muted class="w-full h-full object-cover"></video>
+              <video src="${reel.duetVideoBase64}" autoplay loop muted class="w-full h-full object-cover"></video>
+            </div>
+            <div class="absolute bottom-4 left-4 space-y-1 z-10">
+              <span class="text-[9px] bg-red-600 text-white font-bold px-1.5 py-0.5 rounded">TikTok Duet</span>
+              <p class="font-bold text-sm text-white">${reel.author}</p>
+              <p class="text-xs text-gray-300">${reel.title}</p>
+            </div>
+          `;
+        } else {
+          div.innerHTML = `
+            <video src="${reel.videoBase64}" autoplay loop muted class="w-full h-full object-cover"></video>
+            <div class="absolute bottom-4 left-4 space-y-1">
+              <p class="font-bold text-sm text-white">${reel.author}</p>
+              <p class="text-xs text-gray-300">${reel.title}</p>
+              <button onclick="openDuetModal('${reel.videoBase64}')" class="text-[10px] bg-red-600 text-white font-bold px-2 py-1 rounded flex items-center gap-1 mt-1"><i class="fa-solid fa-[#fa-duet]"></i> Duet React</button>
+            </div>
+          `;
+        }
+        container.appendChild(div);
+      });
+    });
+
+    // MEDIA PREVIEW & FEED HELPERS
     window.previewMedia = (input, type) => {
       const file = input.files[0];
       if (!file) return;
@@ -404,6 +628,7 @@
         media: selectedMediaBase64 || null,
         mediaType: selectedMediaType || null,
         likes: 0,
+        views: 1,
         isBoosted: false,
         timestamp: Date.now()
       });
@@ -438,7 +663,7 @@
       reader.readAsDataURL(file);
     };
 
-    // PAID FEATURE: Boost Post
+    // BOOST POST
     window.openBoostModal = (postKey) => {
       if (!currentUser) return alert("Please login first!");
       document.getElementById('boostPostKey').value = postKey;
@@ -461,7 +686,7 @@
       alert("Success! Your post has been boosted and pinned on top.");
     };
 
-    // PAID FEATURE: Verified Badge Purchase
+    // VERIFICATION
     window.purchaseVerification = async () => {
       if (!currentUser) return alert("Please login first!");
       const cost = 999;
@@ -477,36 +702,7 @@
       alert("Congratulations! You are now a Verified Creator with a Blue Tick.");
     };
 
-    // PAID FEATURE: Send Gift to Creator
-    window.openGiftModal = (authorUid) => {
-      if (!currentUser) return alert("Please login first!");
-      if (currentUser.uid === authorUid) return alert("You cannot send gifts to yourself!");
-      document.getElementById('giftTargetUid').value = authorUid;
-      toggleModal('giftModal');
-    };
-
-    window.confirmSendGift = async () => {
-      const targetUid = document.getElementById('giftTargetUid').value;
-      const giftCost = parseFloat(document.getElementById('giftAmount').value);
-
-      const senderWalletRef = ref(db, `wallets/${currentUser.uid}/balance`);
-      const senderSnap = await get(senderWalletRef);
-      const senderBal = senderSnap.exists() ? senderSnap.val() : 0;
-
-      if (senderBal < giftCost) return alert("Insufficient balance in your wallet!");
-
-      // Deduct from sender, add to receiver
-      await set(senderWalletRef, senderBal - giftCost);
-      const receiverWalletRef = ref(db, `wallets/${targetUid}/balance`);
-      const receiverSnap = await get(receiverWalletRef);
-      const receiverBal = receiverSnap.exists() ? receiverSnap.val() : 0;
-      await set(receiverWalletRef, receiverBal + giftCost);
-
-      toggleModal('giftModal');
-      alert("Gift sent successfully to the creator!");
-    };
-
-    // Manual Deposit
+    // DEPOSIT MANUAL
     window.submitDeposit = async () => {
       if (!currentUser) return;
       const method = document.getElementById('depositMethod').value;
@@ -526,18 +722,20 @@
         timestamp: Date.now()
       });
       toggleModal('depositModal');
-      alert("Top-up request submitted! Admin will verify and credit your wallet within 15 minutes.");
+      alert("Top-up request submitted!");
     };
 
-    // Feed Render with Boost & Verified Badges
+    // FEED & ANALYTICS DATA CALCULATOR
     onValue(ref(db, 'posts'), (snapshot) => {
       const feed = document.getElementById('postsFeed'); feed.innerHTML = '';
       const data = snapshot.val(); if (!data) return;
       
+      let calcViews = 0;
       const postsArray = Object.entries(data);
       postsArray.sort((a, b) => (b[1].isBoosted ? 1 : 0) - (a[1].isBoosted ? 1 : 0));
 
       postsArray.forEach(([key, post]) => {
+        calcViews += (post.views || 1);
         const el = document.createElement('div');
         el.className = `glassmorphism p-4 rounded-xl space-y-3 ${post.isBoosted ? 'border border-amber-500/50 bg-amber-950/10' : ''}`;
         el.innerHTML = `
@@ -560,32 +758,16 @@
           ${post.media && post.mediaType === 'video' ? `<video src="${post.media}" controls class="w-full h-64 object-cover rounded-lg"></video>` : ''}
           <div class="flex justify-between items-center text-xs text-gray-400 pt-2 border-t border-gray-800">
             <span>${post.likes || 0} Likes</span>
-            ${currentUser && currentUser.uid !== post.uid ? `<button onclick="openGiftModal('${post.uid}')" class="text-pink-400 font-bold hover:underline flex items-center gap-1"><i class="fa-solid fa-gift"></i> Send Gift</button>` : ''}
+            <span class="text-gray-500"><i class="fa-regular fa-eye"></i> ${post.views || 1} Views</span>
           </div>
         `;
         feed.appendChild(el);
       });
+
+      document.getElementById('statTotalViews').innerText = calcViews;
     });
 
-    // Reels Render
-    onValue(ref(db, 'reels'), (snapshot) => {
-      const container = document.getElementById('reelsContainer'); container.innerHTML = '';
-      const data = snapshot.val(); if (!data) { container.innerHTML = `<p class="text-xs text-center text-gray-500 py-20">No reels uploaded yet.</p>`; return; }
-      Object.values(data).reverse().forEach(reel => {
-        const div = document.createElement('div');
-        div.className = "reel-card relative h-full bg-black rounded-xl overflow-hidden flex items-center justify-center border border-gray-800";
-        div.innerHTML = `
-          <video src="${reel.videoBase64}" autoplay loop muted class="w-full h-full object-cover"></video>
-          <div class="absolute bottom-4 left-4 space-y-1">
-            <p class="font-bold text-sm text-white">${reel.author}</p>
-            <p class="text-xs text-gray-300">${reel.title}</p>
-          </div>
-        `;
-        container.appendChild(div);
-      });
-    });
-
-    // Secret Admin Trigger
+    // SECRET ADMIN TRIGGER
     let tapCount = 0; let tapTimer = null;
     window.handleLogoTap = () => {
       tapCount++; clearTimeout(tapTimer);
@@ -603,7 +785,6 @@
     window.lockAdminPanel = () => document.getElementById('eagleEyePanel').classList.add('hidden');
 
     function loadAdminData() {
-      // Load Deposits
       onValue(ref(db, 'deposits'), (snapshot) => {
         const container = document.getElementById('depositRequestsContainer'); container.innerHTML = '';
         const data = snapshot.val(); if (!data) return;
@@ -618,29 +799,6 @@
               </div>
               <div class="flex gap-2">
                 <button onclick="approveDeposit('${key}', '${item.uid}', ${item.amount})" class="bg-green-600 px-2 py-1 rounded text-white font-bold">Approve</button>
-                <button onclick="rejectDeposit('${key}')" class="bg-red-600 px-2 py-1 rounded text-white">Reject</button>
-              </div>
-            `;
-            container.appendChild(div);
-          }
-        });
-      });
-      // Load Withdrawals
-      onValue(ref(db, 'withdrawals'), (snapshot) => {
-        const container = document.getElementById('withdrawRequestsContainer'); container.innerHTML = '';
-        const data = snapshot.val(); if (!data) return;
-        Object.entries(data).reverse().forEach(([key, item]) => {
-          if (item.status === 'pending') {
-            const div = document.createElement('div');
-            div.className = "p-3 bg-gray-900 rounded-lg border border-gray-800 flex justify-between items-center text-xs";
-            div.innerHTML = `
-              <div>
-                <p class="font-bold">${item.userEmail}</p>
-                <p class="text-amber-400">${item.method}: PKR ${item.amount} (${item.account})</p>
-              </div>
-              <div class="flex gap-2">
-                <button onclick="approveWithdrawal('${key}')" class="bg-green-600 px-2 py-1 rounded text-white font-bold">Mark Paid</button>
-                <button onclick="rejectWithdrawal('${key}', '${item.uid}', ${item.amount})" class="bg-red-600 px-2 py-1 rounded text-white">Refund & Reject</button>
               </div>
             `;
             container.appendChild(div);
@@ -655,31 +813,11 @@
       const currentBal = snap.exists() ? snap.val() : 0;
       await set(walletRef, currentBal + amount);
       await update(ref(db, `deposits/${depKey}`), { status: 'approved' });
-      alert("Top-up approved and credited!");
-    };
-
-    window.rejectDeposit = async (depKey) => {
-      await update(ref(db, `deposits/${depKey}`), { status: 'rejected' });
-      alert("Deposit request rejected.");
-    };
-
-    window.approveWithdrawal = async (witKey) => {
-      await update(ref(db, `withdrawals/${witKey}`), { status: 'paid' });
-      alert("Withdrawal marked as paid!");
-    };
-
-    window.rejectWithdrawal = async (witKey, targetUid, amount) => {
-      const walletRef = ref(db, `wallets/${targetUid}/balance`);
-      const snap = await get(walletRef);
-      const currentBal = snap.exists() ? snap.val() : 0;
-      await set(walletRef, currentBal + amount);
-      await update(ref(db, `withdrawals/${witKey}`), { status: 'rejected' });
-      alert("Withdrawal rejected and funds refunded to user wallet.");
+      alert("Top-up approved!");
     };
 
     window.requestWithdrawal = async () => {
       if (!currentUser) return;
-      const method = document.getElementById('withdrawMethod').value;
       const account = document.getElementById('withdrawAccount').value;
       const amount = parseFloat(document.getElementById('withdrawAmount').value);
       if (!account || !amount || amount < 500) return alert("Minimum withdrawal is PKR 500!");
@@ -690,8 +828,6 @@
       if (currentBal < amount) return alert("Insufficient balance!");
 
       await set(walletRef, currentBal - amount);
-      const reqRef = push(ref(db, 'withdrawals'));
-      await set(reqRef, { uid: currentUser.uid, userEmail: currentUser.email, method, account, amount, status: 'pending', timestamp: Date.now() });
       alert("Withdrawal requested successfully!");
       toggleModal('walletModal');
     };
@@ -703,10 +839,17 @@
     function openWalletModal() { toggleModal('walletModal'); }
     function openUploadReelModal() { toggleModal('uploadReelModal'); }
     function openVerifyModal() { toggleModal('verifyModal'); }
-    function openBoostInfo() { alert("Boost Feature: Pay a small fee to pin your post on top of everyone's feed for maximum views!"); }
+    function openAnalyticsModal() { toggleModal('analyticsModal'); }
+    function openBoostInfo() { alert("Boost Feature: Pay a small fee to pin your post on top of everyone's feed!"); }
+    function joinCommunity(name) { alert("Welcome to " + name + " community group!"); }
+    
     function switchTab(tab) {
-      if (tab === 'feed') { document.getElementById('feedTab').classList.remove('hidden'); document.getElementById('reelsTab').classList.add('hidden'); }
-      else { document.getElementById('feedTab').classList.add('hidden'); document.getElementById('reelsTab').classList.remove('hidden'); }
+      document.getElementById('feedTab').classList.add('hidden');
+      document.getElementById('reelsTab').classList.add('hidden');
+      document.getElementById('groupsTab').classList.add('hidden');
+      if (tab === 'feed') document.getElementById('feedTab').classList.remove('hidden');
+      if (tab === 'reels') document.getElementById('reelsTab').classList.remove('hidden');
+      if (tab === 'groups') document.getElementById('groupsTab').classList.remove('hidden');
     }
   </script>
 </body>
