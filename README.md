@@ -8,7 +8,10 @@
   <!-- FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
-    body { background-color: #0b0f19; color: #f3f4f6; font-family: 'Inter', sans-serif; padding-bottom: 60px; }
+    body { background-color: #0b0f19; color: #f3f4f6; font-family: 'Inter', sans-serif; padding-bottom: 60px; transition: background 0.3s, color 0.3s; }
+    body.light-theme { background-color: #f3f4f6; color: #1f2937; }
+    body.light-theme .glassmorphism { background: rgba(255, 255, 255, 0.85); border: 1px solid rgba(0, 0, 0, 0.08); color: #1f2937; }
+    body.light-theme input, body.light-theme textarea, body.light-theme select { background-color: #ffffff !important; color: #1f2937 !important; border-color: #d1d5db !important; }
     @media (min-width: 768px) { body { padding-bottom: 0; } }
     .glassmorphism { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
     .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -31,35 +34,39 @@
       </div>
     </div>
 
-    <div id="authNavButtons" class="flex items-center space-x-3">
-      <button onclick="toggleModal('authModal')" class="bg-blue-600 hover:bg-blue-700 text-sm font-semibold px-4 py-2 rounded-lg transition">Login / Register</button>
-    </div>
+    <div class="flex items-center space-x-2">
+      <!-- THEME TOGGLE BUTTON -->
+      <button onclick="toggleTheme()" class="text-gray-300 hover:text-white p-1.5 text-sm" title="Toggle Theme"><i class="fa-solid fa-circle-half-stroke"></i></button>
 
-    <div id="userNavProfile" class="hidden flex items-center space-x-2 md:space-x-3">
-      <!-- NOTIFICATION BELL ICON -->
-      <button onclick="openNotificationsModal()" class="relative text-gray-300 hover:text-white p-1.5">
-        <i class="fa-solid fa-bell text-lg"></i>
-        <span id="notifBadge" class="hidden absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></span>
-      </button>
-      <!-- DIRECT MESSAGES CHAT ICON -->
-      <button onclick="openChatModal()" class="text-gray-300 hover:text-white p-1.5" title="Direct Messages">
-        <i class="fa-solid fa-paper-plane text-lg"></i>
-      </button>
-
-      <button onclick="openAnalyticsModal()" class="bg-indigo-600/80 hover:bg-indigo-600 text-xs font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1">
-        <i class="fa-solid fa-chart-line"></i> <span class="hidden sm:inline">Analytics</span>
-      </button>
-      <button onclick="openWalletModal()" class="bg-gradient-to-r from-amber-500 to-yellow-600 text-xs font-bold px-2.5 py-1.5 rounded-lg hover:opacity-90 flex items-center gap-1 text-black">
-        <i class="fa-solid fa-coins"></i> <span id="navWalletBalance">PKR 0</span>
-      </button>
-      <button onclick="openDepositModal()" class="bg-gradient-to-r from-green-500 to-emerald-600 text-xs font-bold px-2.5 py-1.5 rounded-lg hover:opacity-90 flex items-center gap-1">
-        <i class="fa-solid fa-wallet"></i> <span class="hidden sm:inline">Top-up</span>
-      </button>
-      <div class="flex items-center gap-1 cursor-pointer" onclick="openMyProfileModal()">
-        <span id="navUserName" class="text-sm font-medium text-gray-300 hover:text-blue-400 transition"></span>
-        <span id="navVerifiedBadge" class="hidden text-blue-400 text-xs" title="Verified Creator"><i class="fa-solid fa-circle-check"></i></span>
+      <div id="authNavButtons" class="flex items-center space-x-3">
+        <button onclick="toggleModal('authModal')" class="bg-blue-600 hover:bg-blue-700 text-sm font-semibold px-4 py-2 rounded-lg transition text-white">Login / Register</button>
       </div>
-      <button onclick="logout()" class="text-gray-400 hover:text-red-400 text-sm pl-1"><i class="fa-solid fa-right-from-bracket"></i></button>
+
+      <div id="userNavProfile" class="hidden flex items-center space-x-2 md:space-x-3">
+        <!-- NOTIFICATION BELL ICON -->
+        <button onclick="openNotificationsModal()" class="relative text-gray-300 hover:text-white p-1.5">
+          <i class="fa-solid fa-bell text-lg"></i>
+          <span id="notifBadge" class="hidden absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></span>
+        </button>
+        <!-- DIRECT MESSAGES CHAT ICON -->
+        <button onclick="openChatModal()" class="text-gray-300 hover:text-white p-1.5" title="Direct Messages">
+          <i class="fa-solid fa-paper-plane text-lg"></i>
+        </button>
+
+        <button onclick="openWalletModal()" class="bg-gradient-to-r from-amber-500 to-yellow-600 text-xs font-bold px-2.5 py-1.5 rounded-lg hover:opacity-90 flex items-center gap-1 text-black">
+          <i class="fa-solid fa-coins"></i> <span id="navWalletBalance">PKR 0</span>
+        </button>
+        <button onclick="openDepositModal()" class="bg-gradient-to-r from-green-500 to-emerald-600 text-xs font-bold px-2.5 py-1.5 rounded-lg hover:opacity-90 flex items-center gap-1 text-white">
+          <i class="fa-solid fa-wallet"></i> <span class="hidden sm:inline">Top-up</span>
+        </button>
+        <div class="flex items-center gap-2 cursor-pointer" onclick="openMyProfileModal()">
+          <img id="navUserAvatarImg" class="w-7 h-7 rounded-full object-cover hidden border border-blue-500" />
+          <div id="navUserAvatarFallback" class="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center font-bold text-xs text-white">U</div>
+          <span id="navUserName" class="text-sm font-medium text-gray-300 hover:text-blue-400 transition"></span>
+          <span id="navVerifiedBadge" class="hidden text-blue-400 text-xs" title="Verified Creator"><i class="fa-solid fa-circle-check"></i></span>
+        </div>
+        <button onclick="logout()" class="text-gray-400 hover:text-red-400 text-sm pl-1"><i class="fa-solid fa-right-from-bracket"></i></button>
+      </div>
     </div>
   </nav>
 
@@ -73,13 +80,19 @@
           <i class="fa-solid fa-house text-blue-500 text-lg"></i> <span class="font-medium">Home Feed</span>
         </button>
         <button onclick="switchTab('reels')" class="w-full flex items-center space-x-3 text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-800/50 transition">
-          <i class="fa-solid fa-clapperboard text-red-500 text-lg"></i> <span class="font-medium">TikTok Reels</span>
+          <i class="fa-solid fa-clapperboard text-red-500 text-lg"></i> <span class="font-medium">PrimeX Reels</span>
+        </button>
+        <button onclick="switchTab('marketplace')" class="w-full flex items-center space-x-3 text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-800/50 transition">
+          <i class="fa-solid fa-store text-emerald-400 text-lg"></i> <span class="font-medium">Marketplace</span>
+        </button>
+        <button onclick="switchTab('live')" class="w-full flex items-center space-x-3 text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-800/50 transition">
+          <i class="fa-solid fa-video text-amber-400 text-lg"></i> <span class="font-medium">Live Streams</span>
         </button>
         <button onclick="switchTab('saved')" class="w-full flex items-center space-x-3 text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-800/50 transition">
           <i class="fa-solid fa-bookmark text-yellow-500 text-lg"></i> <span class="font-medium">Saved Bookmarks</span>
         </button>
         <button onclick="switchTab('groups')" class="w-full flex items-center space-x-3 text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-800/50 transition">
-          <i class="fa-solid fa-users text-green-400 text-lg"></i> <span class="font-medium">Facebook Communities</span>
+          <i class="fa-solid fa-users text-green-400 text-lg"></i> <span class="font-medium">Communities</span>
         </button>
         <button onclick="openChatModal()" class="w-full flex items-center space-x-3 text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-800/50 transition">
           <i class="fa-solid fa-comments text-cyan-400 text-lg"></i> <span class="font-medium">Direct Messages</span>
@@ -93,18 +106,15 @@
         <button onclick="openVerifyModal()" class="w-full flex items-center space-x-3 text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-800/50 transition">
           <i class="fa-solid fa-certificate text-blue-400 text-lg"></i> <span class="font-medium">Get Verified Badge</span>
         </button>
-        <button onclick="openWalletModal()" class="w-full flex items-center space-x-3 text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-800/50 transition">
-          <i class="fa-solid fa-wallet text-amber-500 text-lg"></i> <span class="font-medium">Wallet & Earnings</span>
-        </button>
       </div>
     </aside>
 
     <!-- CENTER CONTENT AREA -->
     <main class="col-span-1 md:col-span-2 space-y-6">
 
-      <!-- INSTAGRAM STORIES BAR -->
+      <!-- PRIME STORIES BAR -->
       <div class="glassmorphism p-3 rounded-xl">
-        <h3 class="text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Instagram Stories</h3>
+        <h3 class="text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">PrimeX Stories</h3>
         <div id="storiesBar" class="flex items-center space-x-3 overflow-x-auto custom-scrollbar pb-1">
           <div onclick="openAddStoryModal()" class="flex-shrink-0 flex flex-col items-center cursor-pointer group">
             <div class="w-14 h-14 rounded-full border-2 border-dashed border-blue-500 flex items-center justify-center bg-gray-900 group-hover:bg-gray-800 transition">
@@ -120,7 +130,7 @@
       <div id="feedTab" class="space-y-6">
         <!-- CREATE POST BOX -->
         <div class="glassmorphism p-4 rounded-xl space-y-3">
-          <textarea id="postInput" rows="2" placeholder="What's happening on PrimeX, sweetie?" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-sm focus:outline-none focus:border-blue-500 resize-none text-white"></textarea>
+          <textarea id="postInput" rows="2" placeholder="What's happening on PrimeX? Use #hashtags" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-sm focus:outline-none focus:border-blue-500 resize-none text-white"></textarea>
           
           <div id="mediaPreviewContainer" class="hidden relative">
             <img id="imagePreview" class="w-full h-40 object-cover rounded-lg hidden" />
@@ -128,10 +138,21 @@
             <button onclick="clearMedia()" class="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
           </div>
 
+          <!-- POLL CREATION CONTAINER -->
+          <div id="pollCreatorContainer" class="hidden space-y-2 p-3 bg-gray-900/60 rounded-lg border border-gray-800">
+            <p class="text-xs font-bold text-blue-400">Create Interactive Poll</p>
+            <input id="pollQuestion" type="text" placeholder="Ask a question..." class="w-full bg-gray-900 border border-gray-700 p-2 rounded text-xs text-white" />
+            <div class="grid grid-cols-2 gap-2">
+              <input id="pollOpt1" type="text" placeholder="Option 1" class="bg-gray-900 border border-gray-700 p-2 rounded text-xs text-white" />
+              <input id="pollOpt2" type="text" placeholder="Option 2" class="bg-gray-900 border border-gray-700 p-2 rounded text-xs text-white" />
+            </div>
+          </div>
+
           <div class="flex justify-between items-center pt-2">
             <div class="flex space-x-3 text-gray-400">
               <label class="cursor-pointer hover:text-blue-400"><i class="fa-regular fa-image text-lg"></i><input type="file" id="imageInput" accept="image/*" class="hidden" onchange="previewMedia(this, 'image')"></label>
               <label class="cursor-pointer hover:text-purple-400"><i class="fa-solid fa-video text-lg"></i><input type="file" id="videoInput" accept="video/*" class="hidden" onchange="previewMedia(this, 'video')"></label>
+              <button onclick="togglePollCreator()" class="hover:text-emerald-400 text-lg" title="Add Poll"><i class="fa-solid fa-square-poll-vertical"></i></button>
             </div>
             <button onclick="submitPost()" class="bg-blue-600 hover:bg-blue-700 text-xs font-bold px-4 py-2 rounded-lg text-white">Publish Post</button>
           </div>
@@ -165,7 +186,7 @@
       <div id="reelsTab" class="hidden space-y-4">
         <div class="flex justify-between items-center">
           <h2 class="text-lg font-bold text-red-400 flex items-center gap-2">
-            <i class="fa-solid fa-fire"></i> Prime Reels & TikTok Duets
+            <i class="fa-solid fa-fire"></i> PrimeX Reels & Duets
           </h2>
           <button onclick="openUploadReelModal()" class="bg-red-600 hover:bg-red-700 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 text-white">
             <i class="fa-solid fa-plus"></i> Upload Reel
@@ -174,39 +195,58 @@
         <div id="reelsContainer" class="h-[600px] overflow-y-scroll reel-snap rounded-2xl glassmorphism space-y-4 custom-scrollbar p-2"></div>
       </div>
 
-      <!-- TAB 3: SAVED BOOKMARKS -->
+      <!-- TAB 3: MARKETPLACE -->
+      <div id="marketplaceTab" class="hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <h2 class="text-lg font-bold text-emerald-400 flex items-center gap-2"><i class="fa-solid fa-store"></i> PrimeX Classifieds & Marketplace</h2>
+          <button onclick="openAddProductModal()" class="bg-emerald-600 hover:bg-emerald-700 text-xs font-bold px-3 py-1.5 rounded-lg text-white"><i class="fa-solid fa-plus"></i> Sell Item</button>
+        </div>
+        <div id="marketplaceContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+      </div>
+
+      <!-- TAB 4: LIVE STREAMS -->
+      <div id="liveTab" class="hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <h2 class="text-lg font-bold text-amber-400 flex items-center gap-2"><i class="fa-solid fa-video"></i> Live Broadcasting Rooms</h2>
+          <button onclick="startLiveStream()" class="bg-amber-600 hover:bg-amber-700 text-xs font-bold px-3 py-1.5 rounded-lg text-black"><i class="fa-solid fa-broadcast-tower"></i> Go Live</button>
+        </div>
+        <div id="liveStreamsContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+      </div>
+
+      <!-- TAB 5: SAVED BOOKMARKS -->
       <div id="savedTab" class="hidden space-y-4">
         <h2 class="text-lg font-bold text-yellow-400 flex items-center gap-2"><i class="fa-solid fa-bookmark"></i> Saved Posts</h2>
         <div id="savedPostsContainer" class="space-y-4"></div>
       </div>
 
-      <!-- TAB 4: GROUPS -->
+      <!-- TAB 6: GROUPS -->
       <div id="groupsTab" class="hidden space-y-4">
-        <h2 class="text-lg font-bold text-green-400 flex items-center gap-2"><i class="fa-solid fa-users"></i> Facebook Style Communities</h2>
+        <h2 class="text-lg font-bold text-green-400 flex items-center gap-2"><i class="fa-solid fa-users"></i> Communities</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div class="glassmorphism p-4 rounded-xl border border-green-500/20 text-center space-y-2">
             <i class="fa-solid fa-code text-2xl text-green-400"></i>
-            <h3 class="font-bold text-sm">Tech & Web Developers GB</h3>
+            <h3 class="font-bold text-sm">Tech & Web Developers</h3>
             <p class="text-[11px] text-gray-400">Discuss web apps, APIs & modern tech.</p>
-            <button onclick="joinCommunity('Tech GB')" class="bg-green-600 text-xs font-bold px-3 py-1 rounded-lg text-white">Joined</button>
+            <button onclick="joinCommunity('Tech Community')" class="bg-green-600 text-xs font-bold px-3 py-1 rounded-lg text-white">Joined</button>
           </div>
           <div class="glassmorphism p-4 rounded-xl border border-blue-500/20 text-center space-y-2">
             <i class="fa-solid fa-mountain text-2xl text-blue-400"></i>
-            <h3 class="font-bold text-sm">Discover Gilgit-Baltistan</h3>
+            <h3 class="font-bold text-sm">Global Explorers Club</h3>
             <p class="text-[11px] text-gray-400">Share news, photos & tourism updates.</p>
-            <button onclick="joinCommunity('GB Tourism')" class="bg-blue-600 text-xs font-bold px-3 py-1 rounded-lg text-white">Joined</button>
+            <button onclick="joinCommunity('Explorers Club')" class="bg-blue-600 text-xs font-bold px-3 py-1 rounded-lg text-white">Joined</button>
           </div>
         </div>
       </div>
 
     </main>
 
-    <!-- RIGHT SIDEBAR -->
+    <!-- RIGHT SIDEBAR (TRENDING & ANALYTICS) -->
     <aside class="hidden md:block col-span-1 space-y-4">
       <div class="glassmorphism p-4 rounded-xl space-y-3 border border-indigo-500/30">
-        <h3 class="font-bold text-sm text-indigo-400 flex items-center gap-1"><i class="fa-solid fa-chart-line"></i> Creator Analytics</h3>
-        <p class="text-xs text-gray-300 leading-relaxed">Monitor your real-time video performance, views growth, and wallet balance analytics.</p>
-        <button onclick="openAnalyticsModal()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg text-xs">Open Dashboard</button>
+        <h3 class="font-bold text-sm text-indigo-400 flex items-center gap-1"><i class="fa-solid fa-fire"></i> Trending Topics</h3>
+        <div id="trendingTagsContainer" class="space-y-2 text-xs">
+          <p class="text-gray-500 text-center py-2">Analyzing trends...</p>
+        </div>
       </div>
       <div class="glassmorphism p-4 rounded-xl space-y-3 border border-amber-500/30">
         <h3 class="font-bold text-sm text-amber-400 flex items-center gap-1"><i class="fa-solid fa-bullhorn"></i> Paid Ad Booster</h3>
@@ -251,9 +291,13 @@
   <div id="userProfileModal" class="fixed inset-0 bg-black/85 hidden items-center justify-center p-4 z-50">
     <div class="glassmorphism max-w-sm w-full p-6 rounded-2xl space-y-4 relative text-center">
       <button onclick="toggleModal('userProfileModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-      <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center text-xl font-bold text-white mx-auto shadow-lg" id="viewProfileAvatar">U</div>
+      <div id="viewProfileAvatarContainer" class="w-16 h-16 rounded-full mx-auto shadow-lg overflow-hidden flex items-center justify-center bg-blue-600 font-bold text-xl text-white">
+        <img id="viewProfileAvatarImg" class="w-full h-full object-cover hidden" />
+        <span id="viewProfileAvatarFallback">U</span>
+      </div>
       <div>
         <h2 id="viewProfileName" class="text-lg font-bold flex items-center justify-center gap-1 text-white">User Name</h2>
+        <p id="viewProfileLocation" class="text-xs text-indigo-400 mt-0.5"></p>
         <p id="viewProfileBio" class="text-xs text-gray-400 mt-1">Bio details will appear here...</p>
       </div>
       <div class="flex justify-center gap-6 py-2 border-y border-gray-800 text-xs text-gray-300">
@@ -269,18 +313,76 @@
 
   <!-- EDIT PROFILE MODAL -->
   <div id="editProfileModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
-    <div class="glassmorphism max-w-sm w-full p-6 rounded-2xl space-y-4 relative">
+    <div class="glassmorphism max-w-sm w-full p-6 rounded-2xl space-y-4 relative max-h-[90vh] overflow-y-auto custom-scrollbar">
       <button onclick="toggleModal('editProfileModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
       <h2 class="text-lg font-bold text-center text-indigo-400 flex items-center justify-center gap-2"><i class="fa-solid fa-user-pen"></i> Update Profile</h2>
+      <div class="text-center space-y-2">
+        <div class="w-20 h-20 rounded-full mx-auto overflow-hidden bg-gray-800 border border-gray-700 flex items-center justify-center">
+          <img id="editAvatarPreview" class="w-full h-full object-cover hidden" />
+          <span id="editAvatarFallbackTxt" class="text-lg font-bold">U</span>
+        </div>
+        <label class="inline-block cursor-pointer bg-gray-800 hover:bg-gray-700 text-xs font-semibold px-3 py-1.5 rounded-lg text-white">
+          Upload Avatar <input type="file" id="editAvatarInput" accept="image/*" class="hidden" onchange="previewEditAvatar(this)">
+        </label>
+      </div>
       <div>
         <label class="text-xs text-gray-400">Display Name</label>
         <input id="editDisplayName" type="text" placeholder="Your Full Name..." class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded-lg text-xs mt-1 text-white" />
+      </div>
+      <div>
+        <label class="text-xs text-gray-400">Date of Birth (DOB)</label>
+        <input id="editDob" type="date" class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded-lg text-xs mt-1 text-white" />
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-xs text-gray-400">Country</label>
+          <input id="editCountry" type="text" placeholder="Country" class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded-lg text-xs mt-1 text-white" />
+        </div>
+        <div>
+          <label class="text-xs text-gray-400">City</label>
+          <input id="editCity" type="text" placeholder="City" class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded-lg text-xs mt-1 text-white" />
+        </div>
       </div>
       <div>
         <label class="text-xs text-gray-400">Bio</label>
         <textarea id="editUserBio" rows="3" placeholder="Tell something about yourself..." class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded-lg text-xs mt-1 text-white resize-none"></textarea>
       </div>
       <button onclick="saveUserProfile()" class="w-full bg-indigo-600 hover:bg-indigo-700 py-2.5 rounded-lg text-xs font-bold text-white">Save Changes</button>
+    </div>
+  </div>
+
+  <!-- ADD MARKETPLACE ITEM MODAL -->
+  <div id="addProductModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
+    <div class="glassmorphism max-w-sm w-full p-6 rounded-2xl space-y-3 relative">
+      <button onclick="toggleModal('addProductModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      <h2 class="text-lg font-bold text-emerald-400 text-center">List Product for Sale</h2>
+      <input id="prodTitle" type="text" placeholder="Product Name" class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded text-xs text-white" />
+      <input id="prodPrice" type="number" placeholder="Price in PKR" class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded text-xs text-white" />
+      <textarea id="prodDesc" rows="2" placeholder="Product details..." class="w-full bg-gray-900 border border-gray-700 p-2.5 rounded text-xs text-white resize-none"></textarea>
+      <input id="prodImg" type="file" accept="image/*" class="w-full bg-gray-900 border border-gray-700 p-2 rounded text-xs text-white" />
+      <button onclick="submitMarketplaceItem()" class="w-full bg-emerald-600 py-2.5 rounded text-xs font-bold text-white">Publish Listing</button>
+    </div>
+  </div>
+
+  <!-- LIVE STREAM ROOM VIEW MODAL -->
+  <div id="liveRoomModal" class="fixed inset-0 bg-black/90 hidden items-center justify-center p-4 z-50">
+    <div class="glassmorphism max-w-lg w-full h-[550px] p-4 rounded-2xl flex flex-col relative">
+      <button onclick="toggleModal('liveRoomModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      <input id="activeLiveRoomId" type="hidden" />
+      <h2 id="liveRoomTitle" class="text-md font-bold text-amber-400 border-b border-gray-800 pb-2"><i class="fa-solid fa-broadcast-tower"></i> Live Broadcast</h2>
+      <div class="flex-1 grid grid-cols-3 gap-2 py-2 overflow-hidden">
+        <div class="col-span-2 bg-black rounded-xl flex items-center justify-center relative overflow-hidden">
+          <video id="liveVideoPlayer" autoplay muted class="w-full h-full object-cover"></video>
+          <span class="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded animate-pulse">LIVE</span>
+        </div>
+        <div class="col-span-1 flex flex-col justify-between bg-gray-900/60 p-2 rounded-xl">
+          <div id="liveChatComments" class="flex-1 overflow-y-auto space-y-1.5 custom-scrollbar text-[11px]"></div>
+          <div class="flex gap-1 pt-2 border-t border-gray-800">
+            <input id="liveCommentInput" type="text" placeholder="Comment..." class="flex-1 bg-gray-900 border border-gray-700 p-1.5 rounded text-[10px] text-white" />
+            <button onclick="sendLiveComment()" class="bg-amber-600 text-black font-bold px-2.5 py-1.5 rounded text-[10px]">Send</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -292,15 +394,18 @@
     <button onclick="switchTab('reels')" class="flex flex-col items-center text-gray-400 hover:text-red-400">
       <i class="fa-solid fa-clapperboard text-lg"></i><span class="text-[10px]">Reels</span>
     </button>
+    <button onclick="switchTab('marketplace')" class="flex flex-col items-center text-gray-400 hover:text-emerald-400">
+      <i class="fa-solid fa-store text-lg"></i><span class="text-[10px]">Shop</span>
+    </button>
+    <button onclick="switchTab('live')" class="flex flex-col items-center text-gray-400 hover:text-amber-400">
+      <i class="fa-solid fa-video text-lg"></i><span class="text-[10px]">Live</span>
+    </button>
     <button onclick="openChatModal()" class="flex flex-col items-center text-gray-400 hover:text-cyan-400">
       <i class="fa-solid fa-paper-plane text-lg"></i><span class="text-[10px]">Chat</span>
     </button>
-    <button onclick="switchTab('saved')" class="flex flex-col items-center text-gray-400 hover:text-yellow-400">
-      <i class="fa-solid fa-bookmark text-lg"></i><span class="text-[10px]">Saved</span>
-    </button>
   </div>
 
-  <!-- MODAL: ADD INSTAGRAM STORY -->
+  <!-- MODAL: ADD STORY -->
   <div id="addStoryModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
     <div class="glassmorphism max-w-sm w-full p-6 rounded-2xl space-y-4 relative">
       <button onclick="toggleModal('addStoryModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
@@ -329,16 +434,16 @@
         <div class="bg-gray-900/80 p-3 rounded-xl border border-indigo-500/20"><p class="text-[10px] text-gray-400 uppercase">Total Post Views</p><p id="statTotalViews" class="text-xl font-extrabold text-blue-400">0</p></div>
         <div class="bg-gray-900/80 p-3 rounded-xl border border-indigo-500/20"><p class="text-[10px] text-gray-400 uppercase">Engagement Rate</p><p id="statEngagement" class="text-xl font-extrabold text-green-400">94.2%</p></div>
         <div class="bg-gray-900/80 p-3 rounded-xl border border-indigo-500/20"><p class="text-[10px] text-gray-400 uppercase">Est. Monetization</p><p id="statMonetization" class="text-xl font-extrabold text-amber-400">PKR 0</p></div>
-        <div class="bg-gray-900/80 p-3 rounded-xl border border-indigo-500/20"><p class="text-[10px] text-gray-400 uppercase">Top Reach Region</p><p class="text-sm font-bold text-purple-400">Gilgit-Baltistan</p></div>
+        <div class="bg-gray-900/80 p-3 rounded-xl border border-indigo-500/20"><p class="text-[10px] text-gray-400 uppercase">Platform Status</p><p class="text-sm font-bold text-purple-400">PrimeX Active</p></div>
       </div>
     </div>
   </div>
 
-  <!-- MODAL: TIKTOK DUET REACTION -->
+  <!-- MODAL: DUET REACTION -->
   <div id="duetModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
     <div class="glassmorphism max-w-md w-full p-6 rounded-2xl space-y-4 relative">
       <button onclick="toggleModal('duetModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-      <h2 class="text-lg font-bold text-center text-red-400">Create TikTok Duet Video</h2>
+      <h2 class="text-lg font-bold text-center text-red-400">Create Duet Video</h2>
       <input id="duetOriginalUrl" type="hidden" />
       <div class="grid grid-cols-2 gap-2 h-40 bg-black rounded-lg overflow-hidden border border-gray-700">
         <video id="duetOriginalPreview" class="w-full h-full object-cover" muted></video>
@@ -517,7 +622,8 @@
     let selectedMediaType = null;
     let activeInspectedUid = null;
     let activeChatTargetUid = null;
-    let globalPostsCache = {};
+    let selectedEditAvatarBase64 = null;
+    let isPollActive = false;
 
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
@@ -526,15 +632,26 @@
         document.getElementById('userNavProfile').classList.remove('hidden');
         
         const profileSnap = await get(ref(db, `users/${user.uid}`));
-        const displayName = profileSnap.exists() && profileSnap.val().displayName 
-          ? profileSnap.val().displayName 
-          : (user.displayName || user.email.split('@')[0]);
+        const profileData = profileSnap.exists() ? profileSnap.val() : {};
+        const displayName = profileData.displayName ? profileData.displayName : (user.displayName || user.email.split('@')[0]);
 
         document.getElementById('navUserName').innerText = displayName;
+        if (profileData.avatar) {
+          document.getElementById('navUserAvatarImg').src = profileData.avatar;
+          document.getElementById('navUserAvatarImg').classList.remove('hidden');
+          document.getElementById('navUserAvatarFallback').classList.add('hidden');
+        } else {
+          document.getElementById('navUserAvatarImg').classList.add('hidden');
+          document.getElementById('navUserAvatarFallback').classList.remove('hidden');
+          document.getElementById('navUserAvatarFallback').innerText = displayName.charAt(0).toUpperCase();
+        }
+
         loadUserWallet(user.uid);
         checkVerificationStatus(user.uid);
         listenNotifications(user.uid);
         loadSavedBookmarks();
+        loadMarketplace();
+        loadLiveStreams();
       } else {
         document.getElementById('authNavButtons').classList.remove('hidden');
         document.getElementById('userNavProfile').classList.add('hidden');
@@ -569,9 +686,9 @@
       });
     }
 
-    // DIRECT MESSAGES (CHAT) SYSTEM
+    // DIRECT MESSAGES CHAT SYSTEM
     window.openChatModal = async () => {
-      if (!currentUser) return alert("Please login first, sweetie!");
+      if (!currentUser) return alert("Please login first!");
       toggleModal('chatModal');
       loadChatUsers();
     };
@@ -587,7 +704,7 @@
           const div = document.createElement('div');
           div.className = "p-2 bg-gray-900 hover:bg-gray-800 rounded-lg cursor-pointer flex items-center gap-2 text-xs";
           div.onclick = () => selectChatUser(uid, uData.displayName || 'User');
-          div.innerHTML = `<div class="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center font-bold text-[10px] text-white">${(uData.displayName || 'U').charAt(0).toUpperCase()}</div><span class="truncate">${uData.displayName || 'User'}</span>`;
+          div.innerHTML = `<div class="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center font-bold text-[10px] text-white overflow-hidden">${uData.avatar ? `<img src="${uData.avatar}" class="w-full h-full object-cover">` : (uData.displayName || 'U').charAt(0).toUpperCase()}</div><span class="truncate">${uData.displayName || 'User'}</span>`;
           list.appendChild(div);
         }
       });
@@ -636,9 +753,7 @@
         timestamp: Date.now()
       });
 
-      // Trigger Notification to Receiver
       pushNotification(activeChatTargetUid, `${currentUser.displayName || 'Someone'} sent you a message!`);
-
       document.getElementById('chatInput').value = '';
     };
 
@@ -676,7 +791,7 @@
       toggleModal('notificationsModal');
     };
 
-    // BOOKMARKS & SAVED POSTS
+    // BOOKMARKS
     window.toggleBookmarkPost = async (postKey) => {
       if (!currentUser) return alert("Please login first!");
       const bookmarkRef = ref(db, `bookmarks/${currentUser.uid}/${postKey}`);
@@ -714,7 +829,6 @@
       });
     }
 
-    // SEARCH FILTER LOGIC
     window.filterFeedPosts = () => {
       const query = document.getElementById('searchInput').value.toLowerCase();
       const posts = document.querySelectorAll('#postsFeed > div');
@@ -725,26 +839,59 @@
       });
     };
 
-    // PROFILE SYSTEM
+    // PROFILE EDIT SYSTEM
     window.openMyProfileModal = async () => {
       if (!currentUser) return alert("Please login first!");
       const profileSnap = await get(ref(db, `users/${currentUser.uid}`));
       if (profileSnap.exists()) {
         const data = profileSnap.val();
         document.getElementById('editDisplayName').value = data.displayName || currentUser.displayName || '';
+        document.getElementById('editDob').value = data.dob || '';
+        document.getElementById('editCountry').value = data.country || '';
+        document.getElementById('editCity').value = data.city || '';
         document.getElementById('editUserBio').value = data.bio || '';
+        if (data.avatar) {
+          selectedEditAvatarBase64 = data.avatar;
+          document.getElementById('editAvatarPreview').src = data.avatar;
+          document.getElementById('editAvatarPreview').classList.remove('hidden');
+          document.getElementById('editAvatarFallbackTxt').classList.add('hidden');
+        }
       }
       toggleModal('editProfileModal');
+    };
+
+    window.previewEditAvatar = (input) => {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        selectedEditAvatarBase64 = reader.result;
+        document.getElementById('editAvatarPreview').src = selectedEditAvatarBase64;
+        document.getElementById('editAvatarPreview').classList.remove('hidden');
+        document.getElementById('editAvatarFallbackTxt').classList.add('hidden');
+      };
+      reader.readAsDataURL(file);
     };
 
     window.saveUserProfile = async () => {
       if (!currentUser) return;
       const displayName = document.getElementById('editDisplayName').value.trim();
+      const dob = document.getElementById('editDob').value;
+      const country = document.getElementById('editCountry').value.trim();
+      const city = document.getElementById('editCity').value.trim();
       const bio = document.getElementById('editUserBio').value.trim();
       if (!displayName) return alert("Name is required!");
 
-      await update(ref(db, `users/${currentUser.uid}`), { displayName, bio });
+      const payload = { displayName, dob, country, city, bio };
+      if (selectedEditAvatarBase64) payload.avatar = selectedEditAvatarBase64;
+
+      await update(ref(db, `users/${currentUser.uid}`), payload);
       document.getElementById('navUserName').innerText = displayName;
+      if (selectedEditAvatarBase64) {
+        document.getElementById('navUserAvatarImg').src = selectedEditAvatarBase64;
+        document.getElementById('navUserAvatarImg').classList.remove('hidden');
+        document.getElementById('navUserAvatarFallback').classList.add('hidden');
+      }
       toggleModal('editProfileModal');
       alert("Profile updated successfully!");
     };
@@ -757,13 +904,31 @@
 
       let name = "User";
       let bio = "No bio available yet.";
+      let locationStr = "";
+      let avatarUrl = null;
+
       if (userSnap.exists()) {
-        name = userSnap.val().displayName || name;
-        bio = userSnap.val().bio || bio;
+        const uVal = userSnap.val();
+        name = uVal.displayName || name;
+        bio = uVal.bio || bio;
+        avatarUrl = uVal.avatar || null;
+        if (uVal.city || uVal.country) {
+          locationStr = [uVal.city, uVal.country].filter(Boolean).join(', ');
+        }
       }
 
-      document.getElementById('viewProfileAvatar').innerText = name.charAt(0).toUpperCase();
+      if (avatarUrl) {
+        document.getElementById('viewProfileAvatarImg').src = avatarUrl;
+        document.getElementById('viewProfileAvatarImg').classList.remove('hidden');
+        document.getElementById('viewProfileAvatarFallback').classList.add('hidden');
+      } else {
+        document.getElementById('viewProfileAvatarImg').classList.add('hidden');
+        document.getElementById('viewProfileAvatarFallback').classList.remove('hidden');
+        document.getElementById('viewProfileAvatarFallback').innerText = name.charAt(0).toUpperCase();
+      }
+
       document.getElementById('viewProfileName').innerHTML = `${name} ${isVerified ? '<span class="text-blue-400 text-xs"><i class="fa-solid fa-circle-check"></i></span>' : ''}`;
+      document.getElementById('viewProfileLocation').innerText = locationStr;
       document.getElementById('viewProfileBio').innerText = bio;
 
       onValue(ref(db, `followers/${targetUid}`), (snap) => {
@@ -804,7 +969,7 @@
       inspectUserProfile(activeInspectedUid);
     };
 
-    // INSTAGRAM STORIES
+    // STORIES
     onValue(ref(db, 'stories'), (snapshot) => {
       const container = document.getElementById('storiesContainer'); container.innerHTML = '';
       const data = snapshot.val(); if (!data) return;
@@ -817,7 +982,7 @@
           div.innerHTML = `
             <div class="w-14 h-14 rounded-full p-[2px] bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500">
               <div class="w-full h-full rounded-full bg-gray-900 border-2 border-black flex items-center justify-center font-bold text-xs text-white uppercase overflow-hidden">
-                ${story.author.charAt(0)}
+                ${story.avatar ? `<img src="${story.avatar}" class="w-full h-full object-cover">` : story.author.charAt(0)}
               </div>
             </div>
             <span class="text-[10px] mt-1 text-gray-300">${story.author.substring(0, 8)}</span>
@@ -833,12 +998,13 @@
       if (!file) return alert("Select media first!");
       const profileSnap = await get(ref(db, `users/${currentUser.uid}`));
       const authorName = profileSnap.exists() && profileSnap.val().displayName ? profileSnap.val().displayName : (currentUser.displayName || currentUser.email.split('@')[0]);
+      const avatarUrl = profileSnap.exists() ? profileSnap.val().avatar : null;
 
       const reader = new FileReader();
       reader.onloadend = async () => {
         const type = file.type.startsWith('image') ? 'image' : 'video';
         const storyRef = push(ref(db, 'stories'));
-        await set(storyRef, { author: authorName, uid: currentUser.uid, media: reader.result, mediaType: type, timestamp: Date.now() });
+        await set(storyRef, { author: authorName, avatar: avatarUrl, uid: currentUser.uid, media: reader.result, mediaType: type, timestamp: Date.now() });
         toggleModal('addStoryModal'); alert("Story published!");
       };
       reader.readAsDataURL(file);
@@ -858,7 +1024,7 @@
       toggleModal('viewStoryModal');
     }
 
-    // TIKTOK DUETS & REELS
+    // DUETS & REELS
     window.openDuetModal = (videoUrl) => {
       if (!currentUser) return alert("Please login first!");
       document.getElementById('duetOriginalUrl').value = videoUrl;
@@ -876,23 +1042,60 @@
       const reader = new FileReader();
       reader.onloadend = async () => {
         const reelRef = push(ref(db, 'reels'));
-        await set(reelRef, { author: authorName, uid: currentUser.uid, title: "Duet with Creator", videoBase64: originalUrl, duetVideoBase64: reader.result, isDuet: true, timestamp: Date.now() });
+        await set(reelRef, { author: authorName, uid: currentUser.uid, title: "Duet Video", videoBase64: originalUrl, duetVideoBase64: reader.result, isDuet: true, reactions: {}, timestamp: Date.now() });
         toggleModal('duetModal'); alert("Duet Reel published!");
       };
       reader.readAsDataURL(file);
     };
 
+    window.toggleReelReaction = async (reelKey, reactionType) => {
+      if (!currentUser) return alert("Please login first!");
+      const reelRef = ref(db, `reels/${reelKey}/reactions`);
+      const snap = await get(reelRef);
+      let reactions = snap.exists() ? snap.val() : {};
+
+      if (reactions[currentUser.uid] === reactionType) {
+        delete reactions[currentUser.uid];
+      } else {
+        reactions[currentUser.uid] = reactionType;
+      }
+      await set(reelRef, reactions);
+    };
+
     onValue(ref(db, 'reels'), (snapshot) => {
       const container = document.getElementById('reelsContainer'); container.innerHTML = '';
       const data = snapshot.val(); if (!data) return;
-      Object.values(data).reverse().forEach(reel => {
+      Object.entries(data).reverse().forEach(([key, reel]) => {
+        const reactions = reel.reactions || {};
+        const reactionCounts = { like: 0, love: 0, haha: 0, wow: 0, sad: 0, angry: 0 };
+        Object.values(reactions).forEach(r => { if (reactionCounts[r] !== undefined) reactionCounts[r]++; });
+        const myReaction = currentUser ? reactions[currentUser.uid] : null;
+
         const div = document.createElement('div');
         div.className = "reel-card relative h-full bg-black rounded-xl overflow-hidden flex items-center justify-center border border-gray-800";
-        if (reel.isDuet) {
-          div.innerHTML = `<div class="grid grid-cols-2 w-full h-full"><video src="${reel.videoBase64}" controls loop class="w-full h-full object-cover"></video><video src="${reel.duetVideoBase64}" controls loop class="w-full h-full object-cover"></video></div><div class="absolute bottom-4 left-4 space-y-1 z-10 bg-black/50 p-2 rounded-lg"><span class="text-[9px] bg-red-600 text-white font-bold px-1.5 py-0.5 rounded">TikTok Duet</span><p class="font-bold text-sm text-white cursor-pointer" onclick="inspectUserProfile('${reel.uid}')">${reel.author}</p><p class="text-xs text-gray-300">${reel.title}</p></div>`;
-        } else {
-          div.innerHTML = `<video src="${reel.videoBase64}" controls loop class="w-full h-full object-cover"></video><div class="absolute bottom-4 left-4 space-y-1 bg-black/50 p-2 rounded-lg z-10"><p class="font-bold text-sm text-white cursor-pointer" onclick="inspectUserProfile('${reel.uid}')">${reel.author}</p><p class="text-xs text-gray-300">${reel.title}</p><button onclick="openDuetModal('${reel.videoBase64}')" class="text-[10px] bg-red-600 text-white font-bold px-2 py-1 rounded flex items-center gap-1 mt-1"><i class="fa-solid fa-duet"></i> Duet React</button></div>`;
-        }
+        
+        let mediaHtml = reel.isDuet 
+          ? `<div class="grid grid-cols-2 w-full h-full"><video src="${reel.videoBase64}" controls loop class="w-full h-full object-cover"></video><video src="${reel.duetVideoBase64}" controls loop class="w-full h-full object-cover"></video></div>`
+          : `<video src="${reel.videoBase64}" controls loop class="w-full h-full object-cover"></video>`;
+
+        div.innerHTML = `
+          ${mediaHtml}
+          <div class="absolute bottom-4 left-4 right-4 space-y-2 z-10 bg-black/60 p-3 rounded-xl backdrop-blur-md">
+            <div class="flex justify-between items-center">
+              <div>
+                <p class="font-bold text-sm text-white cursor-pointer hover:underline" onclick="inspectUserProfile('${reel.uid}')">${reel.author}</p>
+                <p class="text-xs text-gray-300">${reel.title}</p>
+              </div>
+              ${!reel.isDuet ? `<button onclick="openDuetModal('${reel.videoBase64}')" class="text-[10px] bg-red-600 text-white font-bold px-2 py-1 rounded">Duet</button>` : ''}
+            </div>
+            <div class="flex items-center space-x-2 pt-1 border-t border-gray-700/50 text-xs">
+              <button onclick="toggleReelReaction('${key}', 'like')" class="flex items-center gap-1 px-2 py-1 rounded ${myReaction === 'like' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-300'}">👍 ${reactionCounts.like}</button>
+              <button onclick="toggleReelReaction('${key}', 'love')" class="flex items-center gap-1 px-2 py-1 rounded ${myReaction === 'love' ? 'bg-red-600 text-white' : 'bg-gray-800 text-gray-300'}">❤️ ${reactionCounts.love}</button>
+              <button onclick="toggleReelReaction('${key}', 'haha')" class="flex items-center gap-1 px-2 py-1 rounded ${myReaction === 'haha' ? 'bg-amber-600 text-white' : 'bg-gray-800 text-gray-300'}">😂 ${reactionCounts.haha}</button>
+              <button onclick="toggleReelReaction('${key}', 'wow')" class="flex items-center gap-1 px-2 py-1 rounded ${myReaction === 'wow' ? 'bg-purple-600 text-white' : 'bg-gray-800 text-gray-300'}">😮 ${reactionCounts.wow}</button>
+            </div>
+          </div>
+        `;
         container.appendChild(div);
       });
     });
@@ -924,10 +1127,24 @@
       document.getElementById('imageInput').value = ''; document.getElementById('videoInput').value = '';
     };
 
+    window.togglePollCreator = () => {
+      isPollActive = !isPollActive;
+      document.getElementById('pollCreatorContainer').classList.toggle('hidden', !isPollActive);
+    };
+
     window.submitPost = async () => {
       if (!currentUser) return alert("Please login first!");
       const content = document.getElementById('postInput').value;
-      if (!content && !selectedMediaBase64) return alert("Add content first!");
+      if (!content && !selectedMediaBase64 && !isPollActive) return alert("Add content first!");
+
+      let pollData = null;
+      if (isPollActive) {
+        const question = document.getElementById('pollQuestion').value;
+        const opt1 = document.getElementById('pollOpt1').value;
+        const opt2 = document.getElementById('pollOpt2').value;
+        if (!question || !opt1 || !opt2) return alert("Fill all poll fields!");
+        pollData = { question, options: [opt1, opt2], votes: { 0: [], 1: [] } };
+      }
 
       const isVerifiedSnap = await get(ref(db, `verifiedUsers/${currentUser.uid}`));
       const isVerified = isVerifiedSnap.exists() && isVerifiedSnap.val() === true;
@@ -938,10 +1155,32 @@
       await set(postRef, {
         author: authorName, uid: currentUser.uid, isVerified, content,
         media: selectedMediaBase64 || null, mediaType: selectedMediaType || null,
-        likes: 0, views: 1, isBoosted: false, timestamp: Date.now()
+        poll: pollData, reactions: {}, views: 1, isBoosted: false, timestamp: Date.now()
       });
 
-      document.getElementById('postInput').value = ''; clearMedia(); alert("Post published live!");
+      document.getElementById('postInput').value = ''; clearMedia();
+      isPollActive = false; document.getElementById('pollCreatorContainer').classList.add('hidden');
+      alert("Post published live!");
+    };
+
+    window.votePoll = async (postKey, optionIndex) => {
+      if (!currentUser) return alert("Please login first!");
+      const pollRef = ref(db, `posts/${postKey}/poll`);
+      const snap = await get(pollRef);
+      if (!snap.exists()) return;
+      const poll = snap.val();
+      
+      // Remove prior votes by user
+      [0, 1].forEach(idx => {
+        if (poll.votes[idx]) {
+          poll.votes[idx] = poll.votes[idx].filter(uid => uid !== currentUser.uid);
+        }
+      });
+
+      if (!poll.votes[optionIndex]) poll.votes[optionIndex] = [];
+      poll.votes[optionIndex].push(currentUser.uid);
+
+      await set(pollRef, poll);
     };
 
     window.submitReel = async () => {
@@ -956,28 +1195,126 @@
       const reader = new FileReader();
       reader.onloadend = async () => {
         const reelRef = push(ref(db, 'reels'));
-        await set(reelRef, { author: authorName, uid: currentUser.uid, title, videoBase64: reader.result, timestamp: Date.now() });
+        await set(reelRef, { author: authorName, uid: currentUser.uid, title, videoBase64: reader.result, reactions: {}, timestamp: Date.now() });
         toggleModal('uploadReelModal'); alert("Reel published!");
       };
       reader.readAsDataURL(file);
     };
 
-    // LIKES & COMMENTS ENGINE
-    window.toggleLikePost = async (postKey) => {
+    // MARKETPLACE
+    window.openAddProductModal = () => { if (!currentUser) return alert("Please login first!"); toggleModal('addProductModal'); };
+    window.submitMarketplaceItem = async () => {
+      const title = document.getElementById('prodTitle').value;
+      const price = document.getElementById('prodPrice').value;
+      const desc = document.getElementById('prodDesc').value;
+      const file = document.getElementById('prodImg').files[0];
+      if (!title || !price || !file) return alert("Fill all product fields!");
+
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const prodRef = push(ref(db, 'marketplace'));
+        await set(prodRef, { title, price, desc, image: reader.result, sellerUid: currentUser.uid, sellerName: currentUser.displayName || 'Seller', timestamp: Date.now() });
+        toggleModal('addProductModal'); alert("Product listed successfully!");
+      };
+      reader.readAsDataURL(file);
+    };
+
+    function loadMarketplace() {
+      onValue(ref(db, 'marketplace'), (snapshot) => {
+        const container = document.getElementById('marketplaceContainer'); container.innerHTML = '';
+        const data = snapshot.val(); if (!data) return;
+        Object.entries(data).reverse().forEach(([key, prod]) => {
+          const div = document.createElement('div');
+          div.className = "glassmorphism p-3 rounded-xl space-y-2 border border-emerald-500/20";
+          div.innerHTML = `
+            <img src="${prod.image}" class="w-full h-36 object-cover rounded-lg" />
+            <div class="flex justify-between items-center"><h3 class="font-bold text-sm">${prod.title}</h3><span class="text-emerald-400 font-extrabold text-xs">PKR ${prod.price}</span></div>
+            <p class="text-[11px] text-gray-400 truncate">${prod.desc}</p>
+            <button onclick="inspectUserProfile('${prod.sellerUid}')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-xs py-1.5 rounded font-bold text-white">Contact Seller</button>
+          `;
+          container.appendChild(div);
+        });
+      });
+    }
+
+    // LIVE STREAMING MODULE
+    window.startLiveStream = async () => {
+      if (!currentUser) return alert("Please login first!");
+      const title = prompt("Enter Live Stream Title:");
+      if (!title) return;
+
+      const liveRef = push(ref(db, 'livestreams'));
+      await set(liveRef, { id: liveRef.key, title, hostUid: currentUser.uid, hostName: currentUser.displayName || 'Host', active: true, timestamp: Date.now() });
+      openLiveRoom(liveRef.key, title);
+    };
+
+    function loadLiveStreams() {
+      onValue(ref(db, 'livestreams'), (snapshot) => {
+        const container = document.getElementById('liveStreamsContainer'); container.innerHTML = '';
+        const data = snapshot.val(); if (!data) return;
+        Object.values(data).forEach(stream => {
+          if (stream.active) {
+            const div = document.createElement('div');
+            div.className = "glassmorphism p-4 rounded-xl space-y-2 border border-amber-500/30 text-center";
+            div.innerHTML = `
+              <div class="w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 mx-auto flex items-center justify-center font-bold"><i class="fa-solid fa-video text-lg"></i></div>
+              <h3 class="font-bold text-sm">${stream.title}</h3>
+              <p class="text-[11px] text-gray-400">Hosted by ${stream.hostName}</p>
+              <button onclick="openLiveRoom('${stream.id}', '${stream.title}')" class="w-full bg-amber-600 text-black text-xs font-bold py-1.5 rounded">Join Room</button>
+            `;
+            container.appendChild(div);
+          }
+        });
+      });
+    }
+
+    window.openLiveRoom = (roomId, title) => {
+      document.getElementById('activeLiveRoomId').value = roomId;
+      document.getElementById('liveRoomTitle').innerHTML = `<i class="fa-solid fa-broadcast-tower"></i> ${title}`;
+      toggleModal('liveRoomModal');
+
+      // Request webcam for streaming simulation
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
+        document.getElementById('liveVideoPlayer').srcObject = stream;
+      }).catch(err => console.log("Webcam permission denied or unavailable"));
+
+      onValue(ref(db, `livestreams/${roomId}/comments`), (snap) => {
+        const box = document.getElementById('liveChatComments'); box.innerHTML = '';
+        const data = snap.val(); if (!data) return;
+        Object.values(data).forEach(c => {
+          const el = document.createElement('div');
+          el.innerHTML = `<span class="font-bold text-amber-400">${c.name}:</span> <span class="text-gray-300">${c.text}</span>`;
+          box.appendChild(el);
+        });
+        box.scrollTop = box.scrollHeight;
+      });
+    };
+
+    window.sendLiveComment = async () => {
+      const roomId = document.getElementById('activeLiveRoomId').value;
+      const text = document.getElementById('liveCommentInput').value.trim();
+      if (!text || !currentUser) return;
+      const refComm = push(ref(db, `livestreams/${roomId}/comments`));
+      await set(refComm, { name: currentUser.displayName || 'User', text, timestamp: Date.now() });
+      document.getElementById('liveCommentInput').value = '';
+    };
+
+    // MULTI-REACTIONS ENGINE
+    window.togglePostReaction = async (postKey, reactionType) => {
       if (!currentUser) return alert("Please login first!");
       const postRef = ref(db, `posts/${postKey}`);
       const snap = await get(postRef);
       if (snap.exists()) {
         const postData = snap.val();
-        const likedBy = postData.likedBy || {};
-        const isLiked = likedBy[currentUser.uid];
+        let reactions = postData.reactions || {};
 
-        if (isLiked) delete likedBy[currentUser.uid];
-        else {
-          likedBy[currentUser.uid] = true;
-          pushNotification(postData.uid, `${currentUser.displayName || 'Someone'} liked your post!`);
+        if (reactions[currentUser.uid] === reactionType) {
+          delete reactions[currentUser.uid];
+        } else {
+          reactions[currentUser.uid] = reactionType;
+          pushNotification(postData.uid, `${currentUser.displayName || 'Someone'} reacted to your post!`);
         }
-        await update(postRef, { likes: Object.keys(likedBy).length, likedBy });
+        await update(postRef, { reactions });
       }
     };
 
@@ -1022,7 +1359,7 @@
       else { navigator.clipboard.writeText(window.location.href); alert("Link copied!"); }
     };
 
-    // BOOST POST & VERIFICATION
+    // BOOST & VERIFICATION
     window.openBoostModal = (postKey) => { if (!currentUser) return alert("Please login first!"); document.getElementById('boostPostKey').value = postKey; toggleModal('boostModal'); };
     window.confirmBoostPost = async () => {
       const postKey = document.getElementById('boostPostKey').value;
@@ -1052,7 +1389,6 @@
       toggleModal('verifyModal'); alert("Verified Blue Tick active!");
     };
 
-    // DEPOSIT MANUAL & WITHDRAW
     window.submitDeposit = async () => {
       if (!currentUser) return;
       const method = document.getElementById('depositMethod').value;
@@ -1065,21 +1401,49 @@
       toggleModal('depositModal'); alert("Top-up request sent!");
     };
 
-    // FEED RENDER ENGINE
+    // FEED RENDER ENGINE & TRENDING HASHTAGS
     onValue(ref(db, 'posts'), (snapshot) => {
       const feed = document.getElementById('postsFeed'); feed.innerHTML = '';
+      const trendingContainer = document.getElementById('trendingTagsContainer');
       const data = snapshot.val(); if (!data) return;
       
       let calcViews = 0;
+      let hashtagCounts = {};
       const postsArray = Object.entries(data);
       postsArray.sort((a, b) => (b[1].isBoosted ? 1 : 0) - (a[1].isBoosted ? 1 : 0));
 
       postsArray.forEach(([key, post]) => {
         calcViews += (post.views || 1);
+        
+        // Extract hashtags
+        const tags = post.content ? post.content.match(/#[\w]+/g) : null;
+        if (tags) {
+          tags.forEach(t => { hashtagCounts[t] = (hashtagCounts[t] || 0) + 1; });
+        }
+
         const commentCount = post.comments ? Object.keys(post.comments).length : 0;
-        const likedBy = post.likedBy || {};
-        const isLikedByMe = currentUser && likedBy[currentUser.uid];
-        const likesCount = Object.keys(likedBy).length;
+        const reactions = post.reactions || {};
+        const reactionCounts = { like: 0, love: 0, haha: 0, wow: 0, sad: 0, angry: 0 };
+        Object.values(reactions).forEach(r => { if (reactionCounts[r] !== undefined) reactionCounts[r]++; });
+        const myReaction = currentUser ? reactions[currentUser.uid] : null;
+
+        // Poll HTML generation
+        let pollHtml = '';
+        if (post.poll) {
+          const totalVotes = Object.values(post.poll.votes || {}).reduce((a, b) => a + (b ? b.length : 0), 0);
+          pollHtml = `<div class="p-3 bg-gray-900/60 rounded-xl space-y-2 border border-gray-800">
+            <p class="font-bold text-xs text-blue-400">${post.poll.question}</p>`;
+          post.poll.options.forEach((opt, idx) => {
+            const votesArr = post.poll.votes[idx] || [];
+            const count = votesArr.length;
+            const pct = totalVotes > 0 ? Math.round((count / totalVotes) * 100) : 0;
+            const hasVoted = currentUser && votesArr.includes(currentUser.uid);
+            pollHtml += `<button onclick="votePoll('${key}', ${idx})" class="w-full text-left p-2 rounded text-xs bg-gray-800 hover:bg-gray-700 flex justify-between items-center ${hasVoted ? 'border border-blue-500' : ''}">
+              <span>${opt} ${hasVoted ? '✓' : ''}</span><span class="text-gray-400">${pct}% (${count})</span>
+            </button>`;
+          });
+          pollHtml += `</div>`;
+        }
 
         const el = document.createElement('div');
         el.className = `glassmorphism p-4 rounded-xl space-y-3 ${post.isBoosted ? 'border border-amber-500/50 bg-amber-950/10' : ''}`;
@@ -1087,7 +1451,7 @@
           ${post.isBoosted ? '<span class="text-[10px] bg-amber-500 text-black font-bold px-2 py-0.5 rounded uppercase"><i class="fa-solid fa-bullhorn"></i> Sponsored Ad</span>' : ''}
           <div class="flex justify-between items-center">
             <div class="flex items-center space-x-2">
-              <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center font-bold text-xs cursor-pointer" onclick="inspectUserProfile('${post.uid}')">${post.author.charAt(0).toUpperCase()}</div>
+              <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center font-bold text-xs cursor-pointer overflow-hidden" onclick="inspectUserProfile('${post.uid}')">${post.author.charAt(0).toUpperCase()}</div>
               <div>
                 <p class="text-sm font-bold flex items-center gap-1 cursor-pointer hover:underline" onclick="inspectUserProfile('${post.uid}')">
                   ${post.author} ${post.isVerified ? '<span class="text-blue-400 text-xs"><i class="fa-solid fa-circle-check"></i></span>' : ''}
@@ -1103,22 +1467,40 @@
           <p class="text-sm text-gray-300">${post.content}</p>
           ${post.media && post.mediaType === 'image' ? `<img src="${post.media}" class="w-full h-64 object-cover rounded-lg" />` : ''}
           ${post.media && post.mediaType === 'video' ? `<video src="${post.media}" controls class="w-full h-64 object-cover rounded-lg"></video>` : ''}
-          <div class="flex justify-between items-center text-xs text-gray-400 pt-2 border-t border-gray-800">
-            <button onclick="toggleLikePost('${key}')" class="flex items-center gap-1 ${isLikedByMe ? 'text-red-500 font-bold' : 'hover:text-red-400'}">
-              <i class="${isLikedByMe ? 'fa-solid' : 'fa-regular'} fa-heart"></i> <span>${likesCount} Likes</span>
-            </button>
-            <button onclick="openCommentsModal('${key}')" class="flex items-center gap-1 hover:text-blue-400">
-              <i class="fa-regular fa-comment"></i> <span>${commentCount} Comments</span>
-            </button>
-            <button onclick="sharePost('${key}')" class="flex items-center gap-1 hover:text-green-400">
-              <i class="fa-solid fa-share"></i> <span>Share</span>
-            </button>
-            <span class="text-gray-500"><i class="fa-regular fa-eye"></i> ${post.views || 1} Views</span>
+          ${pollHtml}
+          
+          <div class="flex flex-wrap gap-2 items-center justify-between text-xs text-gray-300 pt-2 border-t border-gray-800">
+            <div class="flex items-center space-x-1.5">
+              <button onclick="togglePostReaction('${key}', 'like')" class="px-2 py-1 rounded flex items-center gap-1 ${myReaction === 'like' ? 'bg-blue-600 text-white' : 'bg-gray-800/80 hover:bg-gray-700'}">👍 <span>${reactionCounts.like}</span></button>
+              <button onclick="togglePostReaction('${key}', 'love')" class="px-2 py-1 rounded flex items-center gap-1 ${myReaction === 'love' ? 'bg-red-600 text-white' : 'bg-gray-800/80 hover:bg-gray-700'}">❤️ <span>${reactionCounts.love}</span></button>
+              <button onclick="togglePostReaction('${key}', 'haha')" class="px-2 py-1 rounded flex items-center gap-1 ${myReaction === 'haha' ? 'bg-amber-600 text-white' : 'bg-gray-800/80 hover:bg-gray-700'}">😂 <span>${reactionCounts.haha}</span></button>
+              <button onclick="togglePostReaction('${key}', 'wow')" class="px-2 py-1 rounded flex items-center gap-1 ${myReaction === 'wow' ? 'bg-purple-600 text-white' : 'bg-gray-800/80 hover:bg-gray-700'}">😮 <span>${reactionCounts.wow}</span></button>
+            </div>
+            <div class="flex items-center space-x-3 text-gray-400">
+              <button onclick="openCommentsModal('${key}')" class="hover:text-blue-400"><i class="fa-regular fa-comment"></i> ${commentCount}</button>
+              <button onclick="sharePost('${key}')" class="hover:text-green-400"><i class="fa-solid fa-share"></i></button>
+              <span><i class="fa-regular fa-eye"></i> ${post.views || 1}</span>
+            </div>
           </div>
         `;
         feed.appendChild(el);
       });
       document.getElementById('statTotalViews').innerText = calcViews;
+
+      // Render Trending Tags
+      trendingContainer.innerHTML = '';
+      const sortedTags = Object.entries(hashtagCounts).sort((a,b) => b[1] - a[1]);
+      if (sortedTags.length > 0) {
+        sortedTags.slice(0, 5).forEach(([tag, count]) => {
+          const tEl = document.createElement('div');
+          tEl.className = "flex justify-between items-center text-gray-300 hover:text-indigo-400 cursor-pointer";
+          tEl.innerHTML = `<span class="font-bold">${tag}</span><span class="text-[10px] bg-gray-800 px-1.5 py-0.5 rounded">${count} posts</span>`;
+          tEl.onclick = () => { document.getElementById('searchInput').value = tag; filterFeedPosts(); };
+          trendingContainer.appendChild(tEl);
+        });
+      } else {
+        trendingContainer.innerHTML = '<p class="text-gray-500 text-center py-2">No trending topics yet.</p>';
+      }
     });
 
     // SECRET ADMIN PANEL
@@ -1208,14 +1590,19 @@
     function openAnalyticsModal() { toggleModal('analyticsModal'); }
     function openBoostInfo() { alert("Boost Feature: Pay a small fee to pin your post on top of everyone's feed!"); }
     function joinCommunity(name) { alert("Welcome to " + name + " community group!"); }
+    function toggleTheme() { document.body.classList.toggle('light-theme'); }
     
     function switchTab(tab) {
       document.getElementById('feedTab').classList.add('hidden');
       document.getElementById('reelsTab').classList.add('hidden');
+      document.getElementById('marketplaceTab').classList.add('hidden');
+      document.getElementById('liveTab').classList.add('hidden');
       document.getElementById('savedTab').classList.add('hidden');
       document.getElementById('groupsTab').classList.add('hidden');
       if (tab === 'feed') document.getElementById('feedTab').classList.remove('hidden');
       if (tab === 'reels') document.getElementById('reelsTab').classList.remove('hidden');
+      if (tab === 'marketplace') document.getElementById('marketplaceTab').classList.remove('hidden');
+      if (tab === 'live') document.getElementById('liveTab').classList.remove('hidden');
       if (tab === 'saved') document.getElementById('savedTab').classList.remove('hidden');
       if (tab === 'groups') document.getElementById('groupsTab').classList.remove('hidden');
     }
